@@ -1,4 +1,4 @@
-package jsql
+package Jsql
 
 import (
 	"testing"
