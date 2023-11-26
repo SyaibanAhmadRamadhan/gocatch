@@ -11,8 +11,8 @@ const (
 	// Equals represents the SQL "=" operator.
 	Equals ComparisonOperator = "="
 
-	// NotEquals represents the SQL "!=" operator.
-	NotEquals ComparisonOperator = "!="
+	// NotEquals represents the SQL "<>" operator.
+	NotEquals ComparisonOperator = "<>"
 
 	// Like represents the SQL "LIKE" operator.
 	Like ComparisonOperator = "LIKE"
@@ -55,4 +55,7 @@ const (
 
 	// Or represents the SQL "OR" logical operator.
 	Or LogicalOperator = "OR"
+
+	Pgx  string = "@"
+	Sqlx string = ":"
 )
