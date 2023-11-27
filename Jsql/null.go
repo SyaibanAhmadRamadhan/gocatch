@@ -5,23 +5,23 @@ import (
 	"time"
 )
 
-// JSQLNullBool is a type that can handle bool null values in databases
-type JSQLNullBool sql.NullBool
+// NullBool is a type that can handle bool null values in databases
+type NullBool sql.NullBool
 
-// NewJSQLNullBool creates a new JSQLNullBool object
-func NewJSQLNullBool(i *bool) JSQLNullBool {
+// NewNullBool creates a new NullBool object
+func NewNullBool(i *bool) NullBool {
 	if i == nil {
-		return JSQLNullBool{}
+		return NullBool{}
 	}
 
-	return JSQLNullBool{
+	return NullBool{
 		Bool:  *i,
 		Valid: true,
 	}
 }
 
 // GetBool returns the bool value if it's valid, or false if it's not.
-func (j JSQLNullBool) GetBool() bool {
+func (j NullBool) GetBool() bool {
 	if !j.Valid {
 		return false
 	}
@@ -30,7 +30,7 @@ func (j JSQLNullBool) GetBool() bool {
 }
 
 // Value returns a pointer to the false value if it's valid, or nil if it's not.
-func (j JSQLNullBool) Value() *bool {
+func (j NullBool) Value() *bool {
 	if !j.Valid {
 		return nil
 	}
@@ -38,23 +38,23 @@ func (j JSQLNullBool) Value() *bool {
 	return &j.Bool
 }
 
-// JSQLNullString is a type that can handle string null values in databases
-type JSQLNullString sql.NullString
+// NullString is a type that can handle string null values in databases
+type NullString sql.NullString
 
-// NewJSQLNullString creates a new JSQLNullString object
-func NewJSQLNullString(s *string) JSQLNullString {
+// NewNullString creates a new NullString object
+func NewNullString(s *string) NullString {
 	if s == nil {
-		return JSQLNullString{}
+		return NullString{}
 	}
 
-	return JSQLNullString{
+	return NullString{
 		String: *s,
 		Valid:  true,
 	}
 }
 
 // GetString returns the String value if it's valid, or empty string if it's not.
-func (j JSQLNullString) GetString() string {
+func (j NullString) GetString() string {
 	if !j.Valid {
 		return ""
 	}
@@ -63,7 +63,7 @@ func (j JSQLNullString) GetString() string {
 }
 
 // Value returns a pointer to the string value if it's valid, or nil if it's not.
-func (j JSQLNullString) Value() *string {
+func (j NullString) Value() *string {
 	if !j.Valid {
 		return nil
 	}
@@ -71,23 +71,23 @@ func (j JSQLNullString) Value() *string {
 	return &j.String
 }
 
-// JSQLNullFloat64 is a type that can handle float64 null values in databases
-type JSQLNullFloat64 sql.NullFloat64
+// NullFloat64 is a type that can handle float64 null values in databases
+type NullFloat64 sql.NullFloat64
 
-// NewJSQLNullFloat64 creates a new JSQLNullFloat64 object
-func NewJSQLNullFloat64(f *float64) JSQLNullFloat64 {
+// NewNullFloat64 creates a new NullFloat64 object
+func NewNullFloat64(f *float64) NullFloat64 {
 	if f == nil {
-		return JSQLNullFloat64{}
+		return NullFloat64{}
 	}
 
-	return JSQLNullFloat64{
+	return NullFloat64{
 		Float64: *f,
 		Valid:   true,
 	}
 }
 
 // GetFloat64 returns the Float64 value if it's valid, or 0.0 if it's not.
-func (j JSQLNullFloat64) GetFloat64() float64 {
+func (j NullFloat64) GetFloat64() float64 {
 	if !j.Valid {
 		return 0.0
 	}
@@ -96,7 +96,7 @@ func (j JSQLNullFloat64) GetFloat64() float64 {
 }
 
 // Value returns a pointer to the float64 value if it's valid, or nil if it's not.
-func (j JSQLNullFloat64) Value() *float64 {
+func (j NullFloat64) Value() *float64 {
 	if !j.Valid {
 		return nil
 	}
@@ -104,23 +104,23 @@ func (j JSQLNullFloat64) Value() *float64 {
 	return &j.Float64
 }
 
-// JSQLNullInt64 is a type that can handle int64 null values in databases
-type JSQLNullInt64 sql.NullInt64
+// NullInt64 is a type that can handle int64 null values in databases
+type NullInt64 sql.NullInt64
 
-// NewJSQLNullInt64 creates a new JSQLNullInt64 object
-func NewJSQLNullInt64(i *int64) JSQLNullInt64 {
+// NewNullInt64 creates a new NullInt64 object
+func NewNullInt64(i *int64) NullInt64 {
 	if i == nil {
-		return JSQLNullInt64{}
+		return NullInt64{}
 	}
 
-	return JSQLNullInt64{
+	return NullInt64{
 		Int64: *i,
 		Valid: true,
 	}
 }
 
 // GetInt64 returns the GetInt64 value if it's valid, or 0 if it's not.
-func (j JSQLNullInt64) GetInt64() int64 {
+func (j NullInt64) GetInt64() int64 {
 	if !j.Valid {
 		return 0
 	}
@@ -129,7 +129,7 @@ func (j JSQLNullInt64) GetInt64() int64 {
 }
 
 // Value returns a pointer to the int64 value if it's valid, or nil if it's not.
-func (j JSQLNullInt64) Value() *int64 {
+func (j NullInt64) Value() *int64 {
 	if !j.Valid {
 		return nil
 	}
@@ -137,23 +137,23 @@ func (j JSQLNullInt64) Value() *int64 {
 	return &j.Int64
 }
 
-// JSQLNullInt32 is a type that can handle null values int64 in databases
-type JSQLNullInt32 sql.NullInt32
+// NullInt32 is a type that can handle null values int64 in databases
+type NullInt32 sql.NullInt32
 
-// NewJSQLNullInt32 creates a new JSQLNullInt32 object
-func NewJSQLNullInt32(i *int32) JSQLNullInt32 {
+// NewNullInt32 creates a new NullInt32 object
+func NewNullInt32(i *int32) NullInt32 {
 	if i == nil {
-		return JSQLNullInt32{}
+		return NullInt32{}
 	}
 
-	return JSQLNullInt32{
+	return NullInt32{
 		Int32: *i,
 		Valid: true,
 	}
 }
 
 // GetInt32 returns the GetInt32 value if it's valid, or 0 if it's not.
-func (j JSQLNullInt32) GetInt32() int32 {
+func (j NullInt32) GetInt32() int32 {
 	if !j.Valid {
 		return 0
 	}
@@ -162,7 +162,7 @@ func (j JSQLNullInt32) GetInt32() int32 {
 }
 
 // Value returns a pointer to the int64 value if it's valid, or nil if it's not.
-func (j JSQLNullInt32) Value() *int32 {
+func (j NullInt32) Value() *int32 {
 	if !j.Valid {
 		return nil
 	}
@@ -170,23 +170,23 @@ func (j JSQLNullInt32) Value() *int32 {
 	return &j.Int32
 }
 
-// JSQLNullInt16 is a type that can handle null values int16 in databases
-type JSQLNullInt16 sql.NullInt16
+// NullInt16 is a type that can handle null values int16 in databases
+type NullInt16 sql.NullInt16
 
-// NewJSQLNullInt16 creates a new JSQLNullInt16 object
-func NewJSQLNullInt16(i *int16) JSQLNullInt16 {
+// NewNullInt16 creates a new NullInt16 object
+func NewNullInt16(i *int16) NullInt16 {
 	if i == nil {
-		return JSQLNullInt16{}
+		return NullInt16{}
 	}
 
-	return JSQLNullInt16{
+	return NullInt16{
 		Int16: *i,
 		Valid: true,
 	}
 }
 
 // GetInt16 returns the GetInt16 value if it's valid, or 0 if it's not.
-func (j JSQLNullInt16) GetInt16() int16 {
+func (j NullInt16) GetInt16() int16 {
 	if !j.Valid {
 		return 0
 	}
@@ -195,7 +195,7 @@ func (j JSQLNullInt16) GetInt16() int16 {
 }
 
 // Value returns a pointer to the int64 value if it's valid, or nil if it's not.
-func (j JSQLNullInt16) Value() *int16 {
+func (j NullInt16) Value() *int16 {
 	if !j.Valid {
 		return nil
 	}
@@ -203,23 +203,23 @@ func (j JSQLNullInt16) Value() *int16 {
 	return &j.Int16
 }
 
-// JSQLNullByte is a type that can handle byte null values byte in databases
-type JSQLNullByte sql.NullByte
+// NullByte is a type that can handle byte null values byte in databases
+type NullByte sql.NullByte
 
-// NewJSQLNullByte creates a new JSQLNullByte object
-func NewJSQLNullByte(b *byte) JSQLNullByte {
+// NewNullByte creates a new NullByte object
+func NewNullByte(b *byte) NullByte {
 	if b == nil {
-		return JSQLNullByte{}
+		return NullByte{}
 	}
 
-	return JSQLNullByte{
+	return NullByte{
 		Byte:  *b,
 		Valid: true,
 	}
 }
 
 // GetByte returns the byte value if it's Valid, or 0 if it's not.
-func (j JSQLNullByte) GetByte() byte {
+func (j NullByte) GetByte() byte {
 	if !j.Valid {
 		return 0
 	}
@@ -228,7 +228,7 @@ func (j JSQLNullByte) GetByte() byte {
 }
 
 // GetByteString returns the string from byte value if it's Valid, or empty string if it's not.
-func (j JSQLNullByte) GetByteString() string {
+func (j NullByte) GetByteString() string {
 	if !j.Valid {
 		return ""
 	}
@@ -237,7 +237,7 @@ func (j JSQLNullByte) GetByteString() string {
 }
 
 // Value returns a pointer to the byte value if it's Valid, or nil if it's not.
-func (j JSQLNullByte) Value() *byte {
+func (j NullByte) Value() *byte {
 	if !j.Valid {
 		return nil
 	}
@@ -245,23 +245,23 @@ func (j JSQLNullByte) Value() *byte {
 	return &j.Byte
 }
 
-// JSQLNullTime is a type that can handle time.Time null values in databases
-type JSQLNullTime sql.NullTime
+// NullTime is a type that can handle time.Time null values in databases
+type NullTime sql.NullTime
 
-// NewJSQLNullTime creates a new JSQLNullTime
-func NewJSQLNullTime(t *time.Time) JSQLNullTime {
+// NewNullTime creates a new NullTime
+func NewNullTime(t *time.Time) NullTime {
 	if t == nil {
-		return JSQLNullTime{}
+		return NullTime{}
 	}
 
-	return JSQLNullTime{
+	return NullTime{
 		Time:  *t,
 		Valid: true,
 	}
 }
 
 // GetTime returns the time value if it's valid, or zero time if it's not.
-func (j JSQLNullTime) GetTime() time.Time {
+func (j NullTime) GetTime() time.Time {
 	if !j.Valid {
 		return time.Time{}
 	}
@@ -270,7 +270,7 @@ func (j JSQLNullTime) GetTime() time.Time {
 }
 
 // Value returns a pointer to the time value if it's valid, or nil if it's not.
-func (j JSQLNullTime) Value() *time.Time {
+func (j NullTime) Value() *time.Time {
 	if !j.Valid {
 		return nil
 	}

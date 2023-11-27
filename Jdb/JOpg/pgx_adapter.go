@@ -25,7 +25,7 @@ func (p PostgresConf) DBURL() string {
 }
 
 type Adapter struct {
-	Pool *pgxpool.Pool
+	*pgxpool.Pool
 }
 
 func PgxNewConnection(pgConf PostgresConf) *pgxpool.Pool {
