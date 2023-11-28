@@ -16,3 +16,8 @@ func LastStringOfSubStr(str string, substr string) string {
 func FirstCharToLower(str string) string {
 	return strings.ToLower(str[:1])
 }
+
+func ToLower(str string) string {
+	str = strings.ToLower(str)
+	return str
+}

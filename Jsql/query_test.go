@@ -5,14 +5,26 @@ import (
 )
 
 func TestFilterToQuery(t *testing.T) {
-	testCases := QFilterNamed{
-		"age": FilterNamedQuery{
+	testCases := QFilterNamedArgs{
+		{
+			Column:      "age",
 			Value:       "rama",
 			Comparasion: IsNotNull,
 			Logical:     Or,
 		},
-		"umur": GenerateQFilterNamed("rama", "test", Equals, And),
-		"name": GenerateQFilterNamedArgByColumn("rama", Equals, And),
+		{
+			Column:      "umur",
+			Value:       "rama",
+			NamedArg:    "test",
+			Comparasion: Equals,
+			Logical:     And,
+		},
+		{
+			Column:      "umurs",
+			Value:       "rama",
+			Comparasion: Equals,
+			Logical:     And,
+		},
 	}
 
 	t.Log(testCases.ToQuery(true, Pgx))

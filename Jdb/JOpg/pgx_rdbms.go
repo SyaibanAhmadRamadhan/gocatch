@@ -8,11 +8,12 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-type RDBMSPgx interface {
+// RDBMSpgx contract for command or query with library https://github.com/jackc/pgx
+type RDBMSpgx interface {
 	QCount(ctx context.Context, sql string, args ...any) (count int64, err error)
 	QAll(ctx context.Context, sql string, args ...any) (rows pgx.Rows, err error)
-	BeginRun(ctx context.Context, fn func(rdbms RDBMSPgx) error) (err error)
-	BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSPgx) error) (err error)
+	BeginRun(ctx context.Context, fn func(rdbms RDBMSpgx) error) (err error)
+	BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSpgx) error) (err error)
 	PgxCommander
 }
 
@@ -21,7 +22,7 @@ type rdbmsPgxImpl struct {
 	PgxCommander
 }
 
-func NewRDBMS(conn *pgxpool.Pool) RDBMSPgx {
+func NewRDBMSpgx(conn *pgxpool.Pool) RDBMSpgx {
 	return &rdbmsPgxImpl{
 		conn:         conn,
 		PgxCommander: conn,
@@ -37,7 +38,7 @@ func (r *rdbmsPgxImpl) QAll(ctx context.Context, sql string, args ...any) (rows 
 	return r.Query(ctx, sql, args...)
 }
 
-func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMSPgx) error) (err error) {
+func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMSpgx) error) (err error) {
 	tx, err := r.Begin(ctx)
 	if err != nil {
 		return fmt.Errorf("failed start tx begin | err: %v", err)
@@ -67,7 +68,7 @@ func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMSPgx) err
 	return err
 }
 
-func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSPgx) error) (err error) {
+func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSpgx) error) (err error) {
 	tx, err := r.conn.BeginTx(ctx, opts)
 	if err != nil {
 		return fmt.Errorf("failed start BeginTx | err: %v", err)

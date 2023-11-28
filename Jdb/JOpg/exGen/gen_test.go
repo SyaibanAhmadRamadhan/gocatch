@@ -10,11 +10,21 @@ func TestGenerateStruct(t *testing.T) {
 	userModel := JOpg.GeneratorModelForStructParam{
 		Src:      &User{},
 		FileName: "UserModel",
+		SpecifiationTable: JOpg.SpecifiationTable{
+			TableName:  "user",
+			SchemaName: "public",
+		},
+		// WithInterfaceRepo: JOpg.WithInterfaceRepo{
+		// 	Make:          true,
+		// 	Dir:           "./repository",
+		// 	InterfaceName: "UserRepo",
+		// },
+		// WithInterfaceImplRepo: JOpg.WithInterfaceImplRepo{
+		// 	Make:              true,
+		// 	ImplLocationDir:   "./repositoryimpl",
+		// 	ImplInterfaceName: "userRepoImpl",
+		// },
 	}
-	// addressModel := JOpg.GeneratorModelForStructParam{
-	// 	Src:      &Address{},
-	// 	FileName: "Address",
-	// }
 
 	JOpg.GeneratorModelForStruct(userModel)
 }

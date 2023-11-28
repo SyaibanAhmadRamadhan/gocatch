@@ -8,6 +8,7 @@ import (
 // from a struct. If a field within the struct includes the tag "ignore", it will be
 // skipped. If the tag is "-", it means that it will enter the nested struct fields
 // and the prefix used here will be from the parameter, not from the tag of the nested struct.
+// map result is a key value pair of field name and tag. ex : {"ID":"id|Jsql.NullString"}
 func GetTagAndFieldNameFromStruct(src any, prefix string, tag string) (s map[string]string) {
 	var val reflect.Value
 
