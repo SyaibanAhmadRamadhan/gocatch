@@ -1,4 +1,4 @@
-package Jstruct
+package JOstruct
 
 import (
 	"reflect"

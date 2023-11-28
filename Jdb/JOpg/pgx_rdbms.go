@@ -8,38 +8,106 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-// RDBMSpgx contract for command or query with library https://github.com/jackc/pgx
-type RDBMSpgx interface {
-	QCount(ctx context.Context, sql string, args ...any) (count int64, err error)
-	QAll(ctx context.Context, sql string, args ...any) (rows pgx.Rows, err error)
-	BeginRun(ctx context.Context, fn func(rdbms RDBMSpgx) error) (err error)
-	BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSpgx) error) (err error)
-	PgxCommander
-}
-
 type rdbmsPgxImpl struct {
 	conn *pgxpool.Pool
 	PgxCommander
 }
 
-func NewRDBMSpgx(conn *pgxpool.Pool) RDBMSpgx {
+func NewRDBMSpgx(conn *pgxpool.Pool) RDBMS {
 	return &rdbmsPgxImpl{
 		conn:         conn,
 		PgxCommander: conn,
 	}
 }
 
-func (r *rdbmsPgxImpl) QCount(ctx context.Context, sql string, args ...any) (count int64, err error) {
+func (r *rdbmsPgxImpl) Write(ctx context.Context, sql string, arguments ...any) (rowsAffected int64, err error) {
+	res, err := r.Exec(ctx, sql, arguments...)
+	if err != nil {
+		return
+	}
+
+	rowsAffected = res.RowsAffected()
+
+	return
+}
+
+func (r *rdbmsPgxImpl) QueryCount(ctx context.Context, sql string, args ...any) (count int64, err error) {
 	err = r.QueryRow(ctx, sql, args...).Scan(&count)
 	return
 }
 
-func (r *rdbmsPgxImpl) QAll(ctx context.Context, sql string, args ...any) (rows pgx.Rows, err error) {
-	return r.Query(ctx, sql, args...)
+func (r *rdbmsPgxImpl) CheckOne(ctx context.Context, sql string, args ...any) (b bool, err error) {
+	err = r.QueryRow(ctx, sql, args...).Scan(&b)
+	return
 }
 
-func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMSpgx) error) (err error) {
+func (r *rdbmsPgxImpl) QueryAll(ctx context.Context, sql string, args ...any) (results []map[string]any, err error) {
+	rows, err := r.Query(ctx, sql, args...)
+	if err != nil {
+		return
+	}
+
+	var fields []string
+	for _, v := range rows.FieldDescriptions() {
+		fields = append(fields, v.Name)
+	}
+
+	results = make([]map[string]any, 0)
+
+	for rows.Next() {
+		result := make(map[string]any)
+		values, err := rows.Values()
+		if err != nil {
+			return nil, err
+		}
+		if len(values) != len(fields) {
+			return nil, fmt.Errorf("query all data, but values and fields not the same | fields: %v, values: %v", fields, values)
+		}
+
+		for i, v := range values {
+			result[fields[i]] = v
+		}
+
+		results = append(results, result)
+	}
+
+	return
+}
+
+func (r *rdbmsPgxImpl) QueryOne(ctx context.Context, sql string, args ...any) (result map[string]any, err error) {
+	rows, err := r.Query(ctx, sql, args...)
+	if err != nil {
+		return
+	}
+
+	var fields []string
+	for _, v := range rows.FieldDescriptions() {
+		fields = append(fields, v.Name)
+	}
+
+	for rows.Next() {
+		result = make(map[string]any)
+		values, err := rows.Values()
+		if err != nil {
+			return nil, err
+		}
+		if len(values) != len(fields) {
+			return nil, fmt.Errorf("query all data, but values and fields not the same | fields: %v, values: %v", fields, values)
+		}
+
+		for i, v := range values {
+			result[fields[i]] = v
+		}
+
+		break
+	}
+
+	return
+}
+
+func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMS) error) (err error) {
 	tx, err := r.Begin(ctx)
+
 	if err != nil {
 		return fmt.Errorf("failed start tx begin | err: %v", err)
 	}
@@ -68,8 +136,13 @@ func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMSpgx) err
 	return err
 }
 
-func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(rdbms RDBMSpgx) error) (err error) {
-	tx, err := r.conn.BeginTx(ctx, opts)
+func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts TxOptions, fn func(rdbms RDBMS) error) (err error) {
+	tx, err := r.conn.BeginTx(ctx, pgx.TxOptions{
+		IsoLevel:       pgx.TxIsoLevel(opts.IsoLevel),
+		AccessMode:     pgx.TxAccessMode(opts.AccessMode),
+		DeferrableMode: pgx.TxDeferrableMode(opts.DeferrableMode),
+		BeginQuery:     opts.BeginQuery,
+	})
 	if err != nil {
 		return fmt.Errorf("failed start BeginTx | err: %v", err)
 	}

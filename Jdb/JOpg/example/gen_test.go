@@ -1,4 +1,4 @@
-package exGen
+package example
 
 import (
 	"testing"

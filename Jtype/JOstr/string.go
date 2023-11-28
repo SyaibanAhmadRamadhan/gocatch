@@ -1,4 +1,4 @@
-package Jstr
+package JOstr
 
 import (
 	"strings"

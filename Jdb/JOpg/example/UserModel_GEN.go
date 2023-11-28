@@ -1,4 +1,4 @@
-package exGen
+package example
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"github.com/SyaibanAhmadRamadhan/jolly/Jsql"
 )
 
-// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/jolly/blob/main/Jdb/JOpg/postgres_generator.go. 
+// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/jolly/blob/main/Jdb/JOpg/postgres_generator.go.
 
 // NewUser is a struct with pointer that represents the table User in the database.
 func NewUser() *User {
@@ -55,237 +55,6 @@ func (u *User) SetArgFieldRoleID(value any, comparasion Jsql.ComparisonOperator,
 
 	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
 		Column:      u.FieldRoleID(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldCreatedBy is a field or column in the table User.
-func (u *User) FieldCreatedBy() string {
-	return "created_by"
-}
-
-// SetCreatedBy is a setter for the field or column CreatedBy in the table User.
-func (u *User) SetCreatedBy(param string) {
-	u.CreatedBy = param
-}
-
-// SetArgFieldCreatedBy sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldCreatedBy()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldCreatedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldCreatedBy()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldCreatedBy(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldUpdatedBy is a field or column in the table User.
-func (u *User) FieldUpdatedBy() string {
-	return "updated_by"
-}
-
-// SetUpdatedBy is a setter for the field or column UpdatedBy in the table User.
-func (u *User) SetUpdatedBy(param string) {
-	u.UpdatedBy = Jsql.NewNullString(&param)
-}
-
-// SetArgFieldUpdatedBy sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldUpdatedBy()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldUpdatedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldUpdatedBy()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldUpdatedBy(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldDeletedAt is a field or column in the table User.
-func (u *User) FieldDeletedAt() string {
-	return "deleted_at"
-}
-
-// SetDeletedAt is a setter for the field or column DeletedAt in the table User.
-func (u *User) SetDeletedAt(param int64) {
-	u.DeletedAt = Jsql.NewNullInt64(&param)
-}
-
-// SetArgFieldDeletedAt sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldDeletedAt()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldDeletedAt(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldDeletedAt()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldDeletedAt(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldDeletedBy is a field or column in the table User.
-func (u *User) FieldDeletedBy() string {
-	return "deleted_by"
-}
-
-// SetDeletedBy is a setter for the field or column DeletedBy in the table User.
-func (u *User) SetDeletedBy(param string) {
-	u.DeletedBy = Jsql.NewNullString(&param)
-}
-
-// SetArgFieldDeletedBy sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldDeletedBy()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldDeletedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldDeletedBy()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldDeletedBy(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldCreatedAt is a field or column in the table User.
-func (u *User) FieldCreatedAt() string {
-	return "created_at"
-}
-
-// SetCreatedAt is a setter for the field or column CreatedAt in the table User.
-func (u *User) SetCreatedAt(param string) {
-	u.CreatedAt = Jsql.NewNullString(&param)
-}
-
-// SetArgFieldCreatedAt sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldCreatedAt()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldCreatedAt(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldCreatedAt()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldCreatedAt(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldID is a field or column in the table User.
-func (u *User) FieldID() string {
-	return "id"
-}
-
-// SetID is a setter for the field or column ID in the table User.
-func (u *User) SetID(param string) {
-	u.ID = param
-}
-
-// SetArgFieldID sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldID()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldID(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldID()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldID(),
-		Value:       value,
-		NamedArg:    namedArg,
-		Comparasion: comparasion,
-		Logical:     logical,
-	})
-
-}
-
-// FieldUsername is a field or column in the table User.
-func (u *User) FieldUsername() string {
-	return "username"
-}
-
-// SetUsername is a setter for the field or column Username in the table User.
-func (u *User) SetUsername(param string) {
-	u.Username = param
-}
-
-// SetArgFieldUsername sets the value, comparison operator, and logical operator for an argument field.
-// The `namedArg` variadic parameter can take up to 1 argument:
-//   - index 0 (named arg): Named Argument
-//
-// by default value is namedArg is: FieldUsername()
-// if variadic function > 1, it will be ignored and get index 0.
-func (u *User) SetArgFieldUsername(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
-	namedArg := u.FieldUsername()
-
-	if customNamedArg[0] != "" {
-		namedArg = customNamedArg[0]
-	}
-
-	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
-		Column:      u.FieldUsername(),
 		Value:       value,
 		NamedArg:    namedArg,
 		Comparasion: comparasion,
@@ -360,6 +129,138 @@ func (u *User) SetArgFieldPassword(value any, comparasion Jsql.ComparisonOperato
 
 }
 
+// FieldCreatedAt is a field or column in the table User.
+func (u *User) FieldCreatedAt() string {
+	return "created_at"
+}
+
+// SetCreatedAt is a setter for the field or column CreatedAt in the table User.
+func (u *User) SetCreatedAt(param string) {
+	u.CreatedAt = Jsql.NewNullString(&param)
+}
+
+// SetArgFieldCreatedAt sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldCreatedAt()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldCreatedAt(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldCreatedAt()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldCreatedAt(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
+// FieldDeletedAt is a field or column in the table User.
+func (u *User) FieldDeletedAt() string {
+	return "deleted_at"
+}
+
+// SetDeletedAt is a setter for the field or column DeletedAt in the table User.
+func (u *User) SetDeletedAt(param int64) {
+	u.DeletedAt = Jsql.NewNullInt64(&param)
+}
+
+// SetArgFieldDeletedAt sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldDeletedAt()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldDeletedAt(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldDeletedAt()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldDeletedAt(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
+// FieldID is a field or column in the table User.
+func (u *User) FieldID() string {
+	return "id"
+}
+
+// SetID is a setter for the field or column ID in the table User.
+func (u *User) SetID(param string) {
+	u.ID = param
+}
+
+// SetArgFieldID sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldID()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldID(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldID()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldID(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
+// FieldUsername is a field or column in the table User.
+func (u *User) FieldUsername() string {
+	return "username"
+}
+
+// SetUsername is a setter for the field or column Username in the table User.
+func (u *User) SetUsername(param string) {
+	u.Username = param
+}
+
+// SetArgFieldUsername sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldUsername()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldUsername(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldUsername()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldUsername(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
 // FieldPhoneNumber is a field or column in the table User.
 func (u *User) FieldPhoneNumber() string {
 	return "phone_number"
@@ -426,41 +327,147 @@ func (u *User) SetArgFieldUpdatedAt(value any, comparasion Jsql.ComparisonOperat
 
 }
 
+// FieldCreatedBy is a field or column in the table User.
+func (u *User) FieldCreatedBy() string {
+	return "created_by"
+}
+
+// SetCreatedBy is a setter for the field or column CreatedBy in the table User.
+func (u *User) SetCreatedBy(param string) {
+	u.CreatedBy = param
+}
+
+// SetArgFieldCreatedBy sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldCreatedBy()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldCreatedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldCreatedBy()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldCreatedBy(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
+// FieldUpdatedBy is a field or column in the table User.
+func (u *User) FieldUpdatedBy() string {
+	return "updated_by"
+}
+
+// SetUpdatedBy is a setter for the field or column UpdatedBy in the table User.
+func (u *User) SetUpdatedBy(param string) {
+	u.UpdatedBy = Jsql.NewNullString(&param)
+}
+
+// SetArgFieldUpdatedBy sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldUpdatedBy()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldUpdatedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldUpdatedBy()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldUpdatedBy(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
+// FieldDeletedBy is a field or column in the table User.
+func (u *User) FieldDeletedBy() string {
+	return "deleted_by"
+}
+
+// SetDeletedBy is a setter for the field or column DeletedBy in the table User.
+func (u *User) SetDeletedBy(param string) {
+	u.DeletedBy = Jsql.NewNullString(&param)
+}
+
+// SetArgFieldDeletedBy sets the value, comparison operator, and logical operator for an argument field.
+// The `namedArg` variadic parameter can take up to 1 argument:
+//   - index 0 (named arg): Named Argument
+//
+// by default value is namedArg is: FieldDeletedBy()
+// if variadic function > 1, it will be ignored and get index 0.
+func (u *User) SetArgFieldDeletedBy(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {
+	namedArg := u.FieldDeletedBy()
+
+	if customNamedArg[0] != "" {
+		namedArg = customNamedArg[0]
+	}
+
+	u.QFilterNamedArgs = append(u.QFilterNamedArgs, Jsql.FilterNamedArg{
+		Column:      u.FieldDeletedBy(),
+		Value:       value,
+		NamedArg:    namedArg,
+		Comparasion: comparasion,
+		Logical:     logical,
+	})
+
+}
+
 // AllField is a function to get all field or column in the table User.
 func (u *User) AllField() (str string) {
 	str += `
-		role_id, 
+		updated_at, 
 		created_by, 
 		updated_by, 
-		deleted_at, 
 		deleted_by, 
-		created_at, 
 		id, 
 		username, 
-		email, 
-		password, 
 		phone_number, 
-		updated_at`
+		created_at, 
+		deleted_at, 
+		role_id, 
+		email, 
+		password`
 	return
 }
 
 // Scan is a function to scan the value with for rows.Value() from the database to the struct User.
-func (u *User) Scan(value any, columns ...string) (err error) {
-	for _, column := range columns {
-		switch column {
-		case u.FieldID():
+func (u *User) Scan(data map[string]any) (err error) {
+	for key, value := range data {
+		switch key {
+		case u.FieldCreatedAt():
 			val, ok := value.(string)
 			if !ok {
-				return errors.New("invalid type string. field ID")
+				return errors.New("invalid type string. field CreatedAt")
 			}
-			u.SetID(val)
+			u.SetCreatedAt(val)
 			return nil
-		case u.FieldUsername():
-			val, ok := value.(string)
+		case u.FieldDeletedAt():
+			val, ok := value.(int64)
 			if !ok {
-				return errors.New("invalid type string. field Username")
+				return errors.New("invalid type int64. field DeletedAt")
 			}
-			u.SetUsername(val)
+			u.SetDeletedAt(val)
+			return nil
+		case u.FieldRoleID():
+			val, ok := value.(int)
+			if !ok {
+				return errors.New("invalid type int. field RoleID")
+			}
+			u.SetRoleID(val)
 			return nil
 		case u.FieldEmail():
 			val, ok := value.(string)
@@ -476,26 +483,12 @@ func (u *User) Scan(value any, columns ...string) (err error) {
 			}
 			u.SetPassword(val)
 			return nil
-		case u.FieldPhoneNumber():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field PhoneNumber")
-			}
-			u.SetPhoneNumber(val)
-			return nil
 		case u.FieldUpdatedAt():
 			val, ok := value.(int64)
 			if !ok {
 				return errors.New("invalid type int64. field UpdatedAt")
 			}
 			u.SetUpdatedAt(val)
-			return nil
-		case u.FieldRoleID():
-			val, ok := value.(int)
-			if !ok {
-				return errors.New("invalid type int. field RoleID")
-			}
-			u.SetRoleID(val)
 			return nil
 		case u.FieldCreatedBy():
 			val, ok := value.(string)
@@ -511,13 +504,6 @@ func (u *User) Scan(value any, columns ...string) (err error) {
 			}
 			u.SetUpdatedBy(val)
 			return nil
-		case u.FieldDeletedAt():
-			val, ok := value.(int64)
-			if !ok {
-				return errors.New("invalid type int64. field DeletedAt")
-			}
-			u.SetDeletedAt(val)
-			return nil
 		case u.FieldDeletedBy():
 			val, ok := value.(string)
 			if !ok {
@@ -525,34 +511,50 @@ func (u *User) Scan(value any, columns ...string) (err error) {
 			}
 			u.SetDeletedBy(val)
 			return nil
-		case u.FieldCreatedAt():
+		case u.FieldID():
 			val, ok := value.(string)
 			if !ok {
-				return errors.New("invalid type string. field CreatedAt")
+				return errors.New("invalid type string. field ID")
 			}
-			u.SetCreatedAt(val)
+			u.SetID(val)
 			return nil
+		case u.FieldUsername():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field Username")
+			}
+			u.SetUsername(val)
+			return nil
+		case u.FieldPhoneNumber():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field PhoneNumber")
+			}
+			u.SetPhoneNumber(val)
+			return nil
+		default:
+			return errors.New("invalid column")
 		}
 	}
-	return errors.New("invalid column")
+	return nil
 }
 
 // SetColumn is a function to set the column to QColumnFields for that will be used in the query.
 func (u *User) SetColumn(columns ...string) (err error) {
 	for _, column := range columns {
 		switch column {
-		case u.FieldUsername():
 		case u.FieldEmail():
 		case u.FieldPassword():
+		case u.FieldCreatedAt():
+		case u.FieldDeletedAt():
+		case u.FieldRoleID():
+		case u.FieldUsername():
 		case u.FieldPhoneNumber():
 		case u.FieldUpdatedAt():
-		case u.FieldID():
 		case u.FieldCreatedBy():
 		case u.FieldUpdatedBy():
-		case u.FieldDeletedAt():
 		case u.FieldDeletedBy():
-		case u.FieldCreatedAt():
-		case u.FieldRoleID():
+		case u.FieldID():
 		default:
 			return errors.New("invalid column")
 		}
@@ -564,13 +566,13 @@ func (u *User) SetColumn(columns ...string) (err error) {
 // DeleteColumnFromQColumnFields is a function to delete the column from QColumnFields for that will be used in the query.
 func (u *User) DeleteColumnFromQColumnFields(elems ...string) (err error) {
 	var colums []string
-	for _, v := range u.QColumnFields{
+	for _, v := range u.QColumnFields {
 		colums = append(colums, v)
 	}
 
 	for _, elem := range elems {
 		index := -1
-		for i, column := range u.QColumnFields{
+		for i, column := range u.QColumnFields {
 			if column == elem {
 				index = i
 				break
@@ -599,4 +601,3 @@ func (u *User) ResetQColumnFields() {
 func (u *User) ResetQFilterNamedArgs() {
 	u.QFilterNamedArgs = Jsql.QFilterNamedArgs{}
 }
-

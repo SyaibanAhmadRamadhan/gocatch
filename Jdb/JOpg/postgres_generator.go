@@ -9,11 +9,12 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOFD"
+
 	"github.com/SyaibanAhmadRamadhan/jolly"
 	"github.com/SyaibanAhmadRamadhan/jolly/Jlog"
-	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOfile"
-	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/Jstr"
-	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/Jstruct"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOstr"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOstruct"
 )
 
 type SpecifiationTable struct {
@@ -25,7 +26,7 @@ type WithInterfaceRepo struct {
 	Make          bool
 	Dir           string
 	InterfaceName string
-	Lib           string // use pgx or sqlx. if you want generate with sqlx, you must set Lib to "sqlx", default is "pgx"
+	Lib           string // use pgx or sqlx. if you want generates with sqlx, you must set Lib to "sqlx", default is "pgx"
 }
 
 type WithInterfaceImplRepo struct {
@@ -87,7 +88,7 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 
 		t := reflect.TypeOf(param.Src).Elem()
 		caller := Jlog.CallerInfo(2)
-		packageName := Jstr.LastStringOfSubStr(caller.PackageName, "/")
+		packageName := JOstr.LastStringOfSubStr(caller.PackageName, "/")
 		fn(`package ` + packageName + "\n\n")
 
 		// Prepare import statements
@@ -119,44 +120,44 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn("}\n\n")
 
 		fn("// TableName is a function to get table name\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") TableName() (table string) {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") TableName() (table string) {\n")
 		fn(`	return "` + param.SpecifiationTable.TableName + "\"\n")
 		fn("}\n\n")
 
 		fn("// SchemaName is a function to get schema name\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
 		fn(`	return "` + param.SpecifiationTable.SchemaName + "\"\n")
 		fn("}\n\n")
 
-		field := Jstruct.GetTagAndFieldNameFromStruct(param.Src, "", "db")
+		field := JOstruct.GetTagAndFieldNameFromStruct(param.Src, "", "db")
 		for k, v := range field {
 			typeStruct := strings.Split(v, "|")[1]
 
 			fn("// Field" + k + " is a field or column in the table " + t.Name() + ".\n")
-			fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Field" + k + "() string {\n")
+			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Field" + k + "() string {\n")
 			fn(`	return "` + strings.Split(v, "|")[0] + "\"\n")
 			fn("}\n\n")
 
 			fn("// Set" + k + " is a setter for the field or column " + k + " in the table " + t.Name() + ".\n")
 			switch typeStruct {
 			case "Jsql.NullString":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) {\n")
 			case "Jsql.NullBool":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) {\n")
 			case "Jsql.NullFloat64":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) {\n")
 			case "Jsql.NullInt64":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) {\n")
 			case "Jsql.NullInt32":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) {\n")
 			case "Jsql.NullByte":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) {\n")
 			case "Jsql.NullTime":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) {\n")
 			case "Jsql.NullInt16":
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) {\n")
 			default:
-				fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") {\n")
+				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") {\n")
 			}
 
 			if typeStruct == "Jsql.NullString" ||
@@ -167,9 +168,9 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 				typeStruct == "Jsql.NullByte" ||
 				typeStruct == "Jsql.NullTime" ||
 				typeStruct == "Jsql.NullInt16" {
-				fn(`	` + Jstr.FirstCharToLower(t.Name()) + "." + k + " = " + strings.ReplaceAll(typeStruct, ".", ".New") + "(&param)" + "\n")
+				fn(`	` + JOstr.FirstCharToLower(t.Name()) + "." + k + " = " + strings.ReplaceAll(typeStruct, ".", ".New") + "(&param)" + "\n")
 			} else {
-				fn(`	` + Jstr.FirstCharToLower(t.Name()) + "." + k + " = param" + "\n")
+				fn(`	` + JOstr.FirstCharToLower(t.Name()) + "." + k + " = param" + "\n")
 			}
 			fn("}\n\n")
 
@@ -179,16 +180,16 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 			fn("//\n")
 			fn("// by default value is namedArg is: Field" + k + "()\n")
 			fn("// if variadic function > 1, it will be ignored and get index 0.\n")
-			fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetArgField" + k +
+			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetArgField" + k +
 				"(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator, customNamedArg ...string) {\n")
-			fn(`	namedArg := ` + Jstr.FirstCharToLower(t.Name()) + ".Field" + k + "()\n")
+			fn(`	namedArg := ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()\n")
 			fn("\n")
 			fn(`	if customNamedArg[0] != "" {` + "\n")
 			fn(`		namedArg = customNamedArg[0]` + "\n")
 			fn(`	}` + "\n")
 			fn("\n")
-			fn(`	` + Jstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs = append(` + Jstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs, Jsql.FilterNamedArg{` + "\n")
-			fn(`		Column:      ` + Jstr.FirstCharToLower(t.Name()) + ".Field" + k + "()," + "\n")
+			fn(`	` + JOstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs = append(` + JOstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs, Jsql.FilterNamedArg{` + "\n")
+			fn(`		Column:      ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()," + "\n")
 			fn(`		Value:       value,` + "\n")
 			fn(`		NamedArg:    namedArg,` + "\n")
 			fn(`		Comparasion: comparasion,` + "\n")
@@ -199,7 +200,7 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		}
 
 		fn("// AllField is a function to get all field or column in the table " + t.Name() + ".\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") AllField() (str string) {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") AllField() (str string) {\n")
 		fn(`	str += `)
 
 		var arrField []string
@@ -211,12 +212,12 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn("}\n\n")
 
 		fn("// Scan is a function to scan the value with for rows.Value() from the database to the struct " + t.Name() + ".\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Scan(value any, columns ...string) (err error) {\n")
-		fn(`	for _, column := range columns {` + "\n")
-		fn(`		switch column {` + "\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Scan(data map[string]any) (err error) {\n")
+		fn(`	for key, value := range data {` + "\n")
+		fn(`		switch key {` + "\n")
 		for k, v := range field {
 			typeStruct := strings.Split(v, "|")[1]
-			fn(`		case ` + Jstr.FirstCharToLower(t.Name()) + `.Field` + k + `():` + "\n")
+			fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + `.Field` + k + `():` + "\n")
 			switch typeStruct {
 			case "Jsql.NullString":
 				fn(`			val, ok := value.(` + "string)\n")
@@ -256,39 +257,41 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 				fn(`				` + `return errors.New("invalid type ` + typeStruct + `. field ` + k + `")` + "\n")
 			}
 			fn(`			` + "}\n")
-			fn(`			` + Jstr.FirstCharToLower(t.Name()) + `.Set` + k + "(val)\n")
+			fn(`			` + JOstr.FirstCharToLower(t.Name()) + `.Set` + k + "(val)\n")
 			fn(`			return nil` + "\n")
 		}
+		fn(`		default:` + "\n")
+		fn(`			return errors.New("invalid column")` + "\n")
 		fn(`		}` + "\n")
 		fn(`	}` + "\n")
-		fn(`	` + "return errors.New(\"invalid column\")\n")
+		fn(`	return nil` + "\n")
 		fn("}\n\n")
 
 		fn("// SetColumn is a function to set the column to QColumnFields for that will be used in the query.\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetColumn(columns ...string) (err error) {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetColumn(columns ...string) (err error) {\n")
 		fn(`	for _, column := range columns {` + "\n")
 		fn(`		switch column {` + "\n")
 		for k := range field {
-			fn(`		case ` + Jstr.FirstCharToLower(t.Name()) + `.Field` + k + `():` + "\n")
+			fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + `.Field` + k + `():` + "\n")
 		}
 		fn(`		default:` + "\n")
 		fn(`			` + "return errors.New(\"invalid column\")\n")
 		fn(`		}` + "\n")
 		fn(`	}` + "\n")
-		fn(`	` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields = append(" +
-			Jstr.FirstCharToLower(t.Name()) + ".QColumnFields, columns...)" + "\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields = append(" +
+			JOstr.FirstCharToLower(t.Name()) + ".QColumnFields, columns...)" + "\n")
 		fn(`	` + "return nil\n")
 		fn("}\n\n")
 
 		fn("// DeleteColumnFromQColumnFields is a function to delete the column from QColumnFields for that will be used in the query.\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") DeleteColumnFromQColumnFields(elems ...string) (err error) {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") DeleteColumnFromQColumnFields(elems ...string) (err error) {\n")
 		fn(`	var colums []string` + "\n")
-		fn(`	for _, v := range ` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
+		fn(`	for _, v := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
 		fn(`		colums = append(colums, v)` + "\n")
 		fn(`	}` + "\n\n")
 		fn(`	for _, elem := range elems {` + "\n")
 		fn(`		index := -1` + "\n")
-		fn(`		for i, column := range ` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
+		fn(`		for i, column := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
 		fn(`			if column == elem {` + "\n")
 		fn(`				index = i` + "\n")
 		fn(`				break` + "\n")
@@ -299,23 +302,23 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`		}` + "\n")
 		fn(`		colums = append(colums[:index], colums[index+1:]...)` + "\n")
 		fn(`	}` + "\n")
-		fn(`	` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields" + ` = colums` + "\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + ` = colums` + "\n")
 		fn(`	return nil` + "\n")
 		fn("}\n\n")
 
 		fn("// QueryColumnFieldToStrings is a function to get the column format string from QColumnFields for that will be used in the query.\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") QueryColumnFieldToStrings() (columnStr string) {\n")
-		fn(`	return strings.Join(` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields, \", \")\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") QueryColumnFieldToStrings() (columnStr string) {\n")
+		fn(`	return strings.Join(` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields, \", \")\n")
 		fn("}\n\n")
 
 		fn("// ResetQColumnFields is a function to reset QColumnFields.\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQColumnFields() {\n")
-		fn(`	` + Jstr.FirstCharToLower(t.Name()) + ".QColumnFields = []string{}\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQColumnFields() {\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields = []string{}\n")
 		fn("}\n\n")
 
 		fn("// ResetQFilterNamedArgs is a function to reset QFilterNamedArgs.\n")
-		fn(`func (` + Jstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQFilterNamedArgs() {\n")
-		fn(`	` + Jstr.FirstCharToLower(t.Name()) + ".QFilterNamedArgs = Jsql.QFilterNamedArgs{}\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQFilterNamedArgs() {\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QFilterNamedArgs = Jsql.QFilterNamedArgs{}\n")
 		fn("}\n\n")
 
 		err := os.WriteFile(param.FileName+"_GEN.go", buf.Bytes(), os.ModePerm)
@@ -340,7 +343,7 @@ func makeInterfaceRepo(param WithInterfaceRepo, src any, caller *Jlog.CallInfo) 
 		structName = v.Name()
 	}
 
-	callerPackageName := Jstr.LastStringOfSubStr(caller.PackageName, "/")
+	callerPackageName := JOstr.LastStringOfSubStr(caller.PackageName, "/")
 
 	thisCaller := Jlog.CallerInfo()
 	lib := "pgx"
@@ -370,21 +373,21 @@ func makeInterfaceRepo(param WithInterfaceRepo, src any, caller *Jlog.CallInfo) 
 	fn(`type ` + param.InterfaceName + `GEN interface {` + "\n")
 
 	fn(`	// Create And Update Is abstract for write command` + "\n")
-	fn(`	Create(ctx context.Context, ` + Jstr.ToLower(structName) + ` *` +
+	fn(`	Create(ctx context.Context, ` + JOstr.ToLower(structName) + ` *` +
 		callerPackageName + "." + structName + `) (err error)` + "\n")
-	fn(`	Update(ctx context.Context, ` + Jstr.ToLower(structName) + ` *` +
+	fn(`	Update(ctx context.Context, ` + JOstr.ToLower(structName) + ` *` +
 		callerPackageName + "." + structName + `) (err error)` + "\n\n")
 
 	fn(`	// FindOne And FindAll And Count Is abstract for read query` + "\n")
-	fn(`	FindOne(ctx context.Context, ` + Jstr.ToLower(structName) + ` *` +
+	fn(`	FindOne(ctx context.Context, ` + JOstr.ToLower(structName) + ` *` +
 		callerPackageName + "." + structName + `) ` +
 		`(err error)` + "\n")
 
-	fn(`	FindAll(ctx context.Context, ` + Jstr.ToLower(structName) + ` *` +
+	fn(`	FindAll(ctx context.Context, ` + JOstr.ToLower(structName) + ` *` +
 		callerPackageName + "." + structName + `) ` +
-		`(` + Jstr.ToLower(structName) + `s []` + callerPackageName + "." + structName + `, err error)` + "\n")
+		`(` + JOstr.ToLower(structName) + `s []` + callerPackageName + "." + structName + `, err error)` + "\n")
 
-	fn(`	Count(ctx context.Context, ` + Jstr.ToLower(structName) + ` *` +
+	fn(`	Count(ctx context.Context, ` + JOstr.ToLower(structName) + ` *` +
 		callerPackageName + "." + structName + `) ` +
 		`(total int64 ,err error)` + "\n\n")
 
@@ -442,17 +445,17 @@ func makeInterfaceRepoImpl(param GeneratorModelForStructParam, caller *Jlog.Call
 		structName = v.Name()
 	}
 
-	fileDir, err := JOfile.FindFile(param.WithInterfaceRepo.InterfaceName + ".go")
+	fileDir, err := JOFD.FindDirPathFileFromGoModule(param.WithInterfaceRepo.InterfaceName + ".go")
 	jolly.PanicIF(err)
 
 	funcNewName := strings.ToUpper(string(param.WithInterfaceImplRepo.ImplInterfaceName[0])) + param.WithInterfaceImplRepo.ImplInterfaceName[1:]
-	interfaceRepoPackageName := Jstr.LastStringOfSubStr(param.WithInterfaceRepo.Dir, "/")
+	interfaceRepoPackageName := JOstr.LastStringOfSubStr(param.WithInterfaceRepo.Dir, "/")
 	interfaceImplName := param.WithInterfaceImplRepo.ImplInterfaceName
 	interfaceName := param.WithInterfaceRepo.InterfaceName
 
-	callerPackageName := Jstr.LastStringOfSubStr(caller.PackageName, "/")
+	callerPackageName := JOstr.LastStringOfSubStr(caller.PackageName, "/")
 
-	moduleName, err := JOfile.GetModuleName()
+	moduleName, err := JOFD.GetModuleName()
 	jolly.PanicIF(err)
 
 	lib := "pgx"
@@ -487,47 +490,47 @@ func makeInterfaceRepoImpl(param GeneratorModelForStructParam, caller *Jlog.Call
 	fn(`}` + "\n\n")
 
 	if param.WithInterfaceImplRepo.ImplLocationDir == param.WithInterfaceRepo.Dir {
-		fn(`func New` + funcNewName + `GEN(` + Jstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + ` ` +
+		fn(`func New` + funcNewName + `GEN(` + JOstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + ` ` +
 			path.Base(thisCaller.PackageName) + "." + "RDBMS" + lib + `) ` +
 			param.WithInterfaceRepo.InterfaceName + `GEN {` + "\n")
 	} else {
-		fn(`func New` + funcNewName + `GEN(` + Jstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + ` ` +
+		fn(`func New` + funcNewName + `GEN(` + JOstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + ` ` +
 			path.Base(thisCaller.PackageName) + "." + "RDBMS" + lib + `) ` +
 			interfaceRepoPackageName + "." + param.WithInterfaceRepo.InterfaceName + `GEN {` + "\n")
 	}
 	fn(`	return &` + param.WithInterfaceImplRepo.ImplInterfaceName + `GEN{` + "\n")
 	fn(`		RDBMS` + lib + ": " +
-		Jstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + "," + "\n")
+		JOstr.FirstCharToLower(param.WithInterfaceImplRepo.ImplInterfaceName) + "," + "\n")
 	fn(`	}` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Create(ctx context.Context, ` +
-		Jstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Create(ctx context.Context, ` +
+		JOstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
 	fn(`	return` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Update(ctx context.Context, ` +
-		Jstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Update(ctx context.Context, ` +
+		JOstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
 	fn(`	return` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) FindOne(ctx context.Context, ` +
-		Jstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) FindOne(ctx context.Context, ` +
+		JOstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (err error) {` + "\n")
 	fn(`	return` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) FindAll(ctx context.Context, ` +
-		Jstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (` +
-		Jstr.ToLower(structName) + "s []" + callerPackageName + "." + structName + `, err error) {` + "\n")
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) FindAll(ctx context.Context, ` +
+		JOstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (` +
+		JOstr.ToLower(structName) + "s []" + callerPackageName + "." + structName + `, err error) {` + "\n")
 	fn(`	return` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Count(ctx context.Context, ` +
-		Jstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (total int64, err error) {` + "\n")
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) Count(ctx context.Context, ` +
+		JOstr.ToLower(structName) + ` *` + callerPackageName + "." + structName + `) (total int64, err error) {` + "\n")
 	fn(`	return` + "\n")
 	fn(`}` + "\n\n")
 
-	fn(`func (` + Jstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) WithTx(j ` +
+	fn(`func (` + JOstr.FirstCharToLower(interfaceImplName) + ` *` + interfaceImplName + `GEN) WithTx(j ` +
 		path.Base(thisCaller.PackageName) + "." + "RDBMS" + lib + `) ` + interfaceRepoPackageName + "." + interfaceName + ` {` + "\n")
 	fn(`	return &` + param.WithInterfaceImplRepo.ImplInterfaceName + `GEN{` + "\n")
 	fn(`		RDBMS` + lib + ": " + "j," + "\n")
