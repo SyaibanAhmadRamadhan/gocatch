@@ -341,7 +341,7 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn("// FieldAndValue is  function for get named arg for write query\n")
 		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldAndValue() JOmap.SA {\n")
 		fn(`	sa := make(JOmap.SA)` + "\n")
-		fn(`	for _, field := range u.QColumnFields {` + "\n")
+		fn(`	for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + `.QColumnFields {` + "\n")
 		fn(`		switch field {` + "\n")
 		for k, _ := range field {
 			fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "():\n")
