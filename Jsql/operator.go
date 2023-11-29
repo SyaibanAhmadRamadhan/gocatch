@@ -3,9 +3,6 @@ package Jsql
 // ComparisonOperator is a string type used to denote SQL comparison operators.
 type ComparisonOperator string
 
-// LogicalOperator is a string type used to denote SQL logical operators.
-type LogicalOperator string
-
 // Constants for various SQL comparison operators.
 const (
 	// Equals represents the SQL "=" operator.
@@ -49,13 +46,32 @@ const (
 
 	// IsNotNull represents the SQL "IS NOT NULL" operator.
 	IsNotNull ComparisonOperator = "IS NOT NULL"
+)
 
+// LogicalOperator is a string type used to denote SQL logical operators.
+type LogicalOperator string
+
+const (
 	// And represents the SQL "AND" logical operator.
 	And LogicalOperator = "AND"
 
 	// Or represents the SQL "OR" logical operator.
 	Or LogicalOperator = "OR"
+)
 
+const (
 	Pgx  string = "@"
 	Sqlx string = ":"
+)
+
+// LockingOperator represents a type for database locking operations.
+// This type is used to manipulate and control database locking operations,
+// like "UPDATE", "INSERT", "DELETE".
+type LockingOperator string
+
+const (
+	ForUpdate LockingOperator = "FOR UPDATE"
+	ForInsert LockingOperator = "FOR INSERT"
+	ForDelete LockingOperator = "FOR DELETE"
+	NotLock   LockingOperator = ""
 )

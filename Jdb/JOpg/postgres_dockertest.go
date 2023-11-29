@@ -8,13 +8,14 @@ import (
 	"github.com/ory/dockertest/v3"
 
 	"github.com/SyaibanAhmadRamadhan/jolly/Jdb"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype"
 )
 
 type PostgresDockerTestConf struct {
 	PostgresConf    PostgresConf
 	ResourceExpired uint
 	pool            *Jdb.DockerTest
-	Image           string
+	image           string
 }
 
 func (p *PostgresDockerTestConf) ImageVersion(pool *Jdb.DockerTest, version string) *dockertest.RunOptions {
@@ -56,28 +57,14 @@ func (p *PostgresDockerTestConf) Connect(resource *dockertest.Resource) (conn *p
 }
 
 func (p *PostgresDockerTestConf) InitConf(version string) {
-	if p.PostgresConf.User == "" {
-		p.PostgresConf.User = "root"
-	}
+	p.PostgresConf.User = Jtype.Ternary(p.PostgresConf.User != "", p.PostgresConf.User, "root")
 
-	if p.PostgresConf.Password == "" {
-		p.PostgresConf.Password = "root"
-	}
+	p.PostgresConf.Password = Jtype.Ternary(p.PostgresConf.Password != "", p.PostgresConf.Password, "root")
 
-	if p.PostgresConf.DB == "" {
-		p.PostgresConf.DB = "postgres"
-	}
+	p.PostgresConf.DB = Jtype.Ternary(p.PostgresConf.DB != "", p.PostgresConf.DB, "dockertest")
 
-	if version == "" {
-		p.Image = "latest"
-	}
+	p.image = Jtype.Ternary(version != "", version, "latest")
 
-	if p.Image == "" {
-		p.Image = version
-	}
-
-	if p.PostgresConf.SSL == "" {
-		p.PostgresConf.SSL = "disable"
-	}
+	p.PostgresConf.SSL = Jtype.Ternary(p.PostgresConf.SSL != "", p.PostgresConf.SSL, "disable")
 
 }

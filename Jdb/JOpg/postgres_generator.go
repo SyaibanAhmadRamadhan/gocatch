@@ -321,6 +321,11 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QFilterNamedArgs = Jsql.QFilterNamedArgs{}\n")
 		fn("}\n\n")
 
+		fn("// Locking is a function to set locking method.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Locking(lockingOperator Jsql.LockingOperator) Jsql.LockingOperator {\n")
+		fn(`	return lockingOperator` + "\n")
+		fn("}\n\n")
+
 		err := os.WriteFile(param.FileName+"_GEN.go", buf.Bytes(), os.ModePerm)
 		jolly.PanicIF(err)
 

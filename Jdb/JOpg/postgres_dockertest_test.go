@@ -22,5 +22,4 @@ func TestPostgresDockerTest(t *testing.T) {
 
 		return err
 	})
-
 }
