@@ -59,9 +59,11 @@ const (
 	Or LogicalOperator = "OR"
 )
 
+type PrefixNamedArgPG string
+
 const (
-	Pgx  string = "@"
-	Sqlx string = ":"
+	Pgx  PrefixNamedArgPG = "@"
+	Sqlx PrefixNamedArgPG = ":"
 )
 
 // LockingOperator represents a type for database locking operations.

@@ -23,7 +23,7 @@ type QFilterNamedArgs []FilterNamedArg
 // If value is empty, it will not be made into a string.
 // firstWhere is a boolean that determines whether the WHERE keyword should be prepended to the query string.
 // If QFIltersNamed is empty, it will return an empty string and an empty map.
-func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefixNamedArg string) (query string, namedArgs map[string]any) {
+func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefixNamedArg PrefixNamedArgPG) (query string, namedArgs map[string]any) {
 	if firstWhere && len(q) > 0 {
 		query += "WHERE "
 	}
@@ -40,7 +40,7 @@ func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefixNamedArg string) (query
 			if filter.NamedArg == "" {
 				filter.NamedArg = filter.Column
 			}
-			query += filter.Column + " " + string(filter.Comparasion) + " " + prefixNamedArg + filter.NamedArg + " "
+			query += filter.Column + " " + string(filter.Comparasion) + " " + string(prefixNamedArg) + filter.NamedArg + " "
 			namedArgs[filter.NamedArg] = filter.Value
 		}
 
