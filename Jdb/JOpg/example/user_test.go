@@ -34,7 +34,7 @@ func TestUser(t *testing.T) {
 		SSL:      "disable",
 	}
 
-	conn := JOpg.PgxNewConnection(confPG)
+	conn := JOpg.PgxNewConnection(confPG, true)
 
 	rdbms := JOpg.NewRDBMSpgx(conn)
 

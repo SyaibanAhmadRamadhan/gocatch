@@ -28,14 +28,16 @@ type Adapter struct {
 	*pgxpool.Pool
 }
 
-func PgxNewConnection(pgConf PostgresConf) *pgxpool.Pool {
+func PgxNewConnection(pgConf PostgresConf, withPing bool) *pgxpool.Pool {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 	conn, err := pgxpool.New(ctx, pgConf.DBURL())
 	jolly.PanicIF(err)
 
-	err = conn.Ping(ctx)
-	jolly.PanicIF(err)
+	if withPing {
+		err = conn.Ping(ctx)
+		jolly.PanicIF(err)
+	}
 
 	return conn
 }
