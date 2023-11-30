@@ -46,7 +46,7 @@ type GeneratorModelForStructParam struct {
 }
 
 // GeneratorModelForStruct generates methods for given structs.
-// This function expects each struct to contain a field `QColumnFields []string`.
+// This function expects each struct to contain a field `RQField []string`.
 // The generated methods manipulate or make use of this field for various operations.
 // The function does not support nested structs with name tag.
 // if you want nested struct for this function, you can use "-" tag in your struct.
@@ -97,12 +97,11 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		importSrc := r.FindString(string(res))
 
 		customImport := fmt.Sprintf(
-			`(%s%s%s%s%s`,
+			`(%s%s%s%s`,
 			"\n\t\"errors\"",
 			"\n\t\"fmt\"",
 			"\n\t\"strings\"",
 			"\n",
-			"\t\"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOmap\"\n",
 		)
 
 		importSrc = strings.Replace(importSrc, "(", customImport, 1)
@@ -134,11 +133,13 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		for k, v := range field {
 			typeStruct := strings.Split(v, "|")[1]
 
+			// FieldName
 			fn("// Field" + k + " is a field or column in the table " + t.Name() + ".\n")
 			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Field" + k + "() string {\n")
 			fn(`	return "` + strings.Split(v, "|")[0] + "\"\n")
 			fn("}\n\n")
 
+			// SetField
 			fn("// Set" + k + " is a setter for the field or column " + k + " in the table " + t.Name() + ".\n")
 			switch typeStruct {
 			case "Jsql.NullString":
@@ -173,44 +174,35 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 			} else {
 				fn(`	` + JOstr.FirstCharToLower(t.Name()) + "." + k + " = param" + "\n")
 			}
-			fn(`	cond := false` + "\n")
-			fn(`	for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields " + "{\n")
-			fn(`		if ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()" + ` == field {` + "\n")
-			fn(`			cond = true` + "\n")
-			fn(`			break` + "\n")
-			fn(`		}` + "\n")
+			fn(`	if ` + JOstr.FirstCharToLower(t.Name()) + ".WCField == nil" + " {\n")
+			fn(`		` + JOstr.FirstCharToLower(t.Name()) + ".WCField = make(JOmap.SA)" + "\n")
 			fn(`	}` + "\n")
-			fn(`	if !cond {` + "\n")
-			fn(`		` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields = append(" +
-				JOstr.FirstCharToLower(t.Name()) + ".QColumnFields, " + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "())\n")
-			fn(`	}` + "\n")
+			fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".WCField[" + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()] = param\n")
 			fn("}\n\n")
 
-			fn("// SetArgField" + k + " sets the value, comparison operator, and logical operator for an argument field.\n")
-			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetArgField" + k +
-				"(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator) {\n")
-			fn(`	namedArg := ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "() + \"_where\"\n")
+			fn("// FNamedArgs" + k + " sets the value, comparison operator, and logical operator for an argument field.\n")
+			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgs" + k +
+				"(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator) Jsql.FilterNamedArg {\n")
+			fn(`	namedArg := ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "() + \"_namedarg\"\n")
 			fn("\n")
-			fn(`	` + JOstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs = append(` + JOstr.FirstCharToLower(t.Name()) + `.QFilterNamedArgs, Jsql.FilterNamedArg{` + "\n")
+			fn(`	return Jsql.FilterNamedArg{` + "\n")
 			fn(`		Column:      ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()," + "\n")
 			fn(`		Value:       value,` + "\n")
 			fn(`		NamedArg:    namedArg,` + "\n")
 			fn(`		Comparasion: comparasion,` + "\n")
 			fn(`		Logical:     logical,` + "\n")
-			fn(`	})` + "\n")
+			fn(`	}` + "\n")
 			fn("\n")
 			fn("}\n\n")
 		}
 
 		fn("// AllField is a function to get all field or column in the table " + t.Name() + ".\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") AllField() (str string) {\n")
-		fn(`	str += `)
-
-		var arrField []string
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") AllField() (str []string) {\n")
+		fn(`	str = []string{ ` + "\n")
 		for _, v := range field {
-			arrField = append(arrField, strings.Split(v, "|")[0])
+			fn("\t\t`" + strings.Split(v, "|")[0] + "`" + ",\n")
 		}
-		fn("`\n\t\t" + strings.Join(arrField, ", \n\t\t") + "`" + "\n")
+		fn(`	}` + "\n")
 		fn(`	return` + "\n")
 		fn("}\n\n")
 
@@ -269,8 +261,8 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`	return nil` + "\n")
 		fn("}\n\n")
 
-		fn("// SetColumn is a function to set the column to QColumnFields for that will be used in the query.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SetColumn(columns ...string) (err error) {\n")
+		fn("// RQFieldSet is a function to set the column to RQField for that will be used in the query.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") RQFieldSet(columns ...string) (err error) {\n")
 		fn(`	for _, column := range columns {` + "\n")
 		fn(`		switch column {` + "\n")
 		for k := range field {
@@ -280,7 +272,7 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`			` + "return errors.New(\"invalid column\")\n")
 		fn(`		}` + "\n")
 		fn(`		cond := false` + "\n")
-		fn(`		for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields " + "{\n")
+		fn(`		for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + ".RQField " + "{\n")
 		fn(`			if column == field {` + "\n")
 		fn(`				cond = true` + "\n")
 		fn(`				break` + "\n")
@@ -289,21 +281,21 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`		if cond == true {` + "\n")
 		fn(`			continue` + "\n")
 		fn(`		}` + "\n")
-		fn(`		` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields = append(" +
-			JOstr.FirstCharToLower(t.Name()) + ".QColumnFields, column)" + "\n")
+		fn(`		` + JOstr.FirstCharToLower(t.Name()) + ".RQField = append(" +
+			JOstr.FirstCharToLower(t.Name()) + ".RQField, column)" + "\n")
 		fn(`	}` + "\n")
 		fn(`	` + "return nil\n")
 		fn("}\n\n")
 
-		fn("// DeleteColumnFromQColumnFields is a function to delete the column from QColumnFields for that will be used in the query.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") DeleteColumnFromQColumnFields(elems ...string) (err error) {\n")
+		fn("// RQFieldDelete is a function to delete the column from RQField for that will be used in the query.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") RQFieldDelete(elems ...string) (err error) {\n")
 		fn(`	var colums []string` + "\n")
-		fn(`	for _, v := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
+		fn(`	for _, v := range ` + JOstr.FirstCharToLower(t.Name()) + ".RQField" + `{` + "\n")
 		fn(`		colums = append(colums, v)` + "\n")
 		fn(`	}` + "\n\n")
 		fn(`	for _, elem := range elems {` + "\n")
 		fn(`		index := -1` + "\n")
-		fn(`		for i, column := range ` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + `{` + "\n")
+		fn(`		for i, column := range ` + JOstr.FirstCharToLower(t.Name()) + ".RQField" + `{` + "\n")
 		fn(`			if column == elem {` + "\n")
 		fn(`				index = i` + "\n")
 		fn(`				break` + "\n")
@@ -314,23 +306,28 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`		}` + "\n")
 		fn(`		colums = append(colums[:index], colums[index+1:]...)` + "\n")
 		fn(`	}` + "\n")
-		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields" + ` = colums` + "\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".RQField" + ` = colums` + "\n")
 		fn(`	return nil` + "\n")
 		fn("}\n\n")
 
-		fn("// QColumnFieldToStrings is a function to get the column format string from QColumnFields for that will be used in the query.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") QColumnFieldToStrings() (columnStr string) {\n")
-		fn(`	return strings.Join(` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields, \", \")\n")
+		fn("// RQFieldToString is a function to get the column format string from RQField for that will be used in the query.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") RQFieldToString() (columnStr string) {\n")
+		fn(`	return strings.Join(` + JOstr.FirstCharToLower(t.Name()) + ".RQField, \", \")\n")
 		fn("}\n\n")
 
-		fn("// ResetQColumnFields is a function to reset QColumnFields.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQColumnFields() {\n")
-		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QColumnFields = []string{}\n")
+		fn("// RQFieldReset is a function to reset RQField.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") RQFieldReset() {\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".RQField = []string{}\n")
 		fn("}\n\n")
 
-		fn("// ResetQFilterNamedArgs is a function to reset QFilterNamedArgs.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") ResetQFilterNamedArgs() {\n")
-		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".QFilterNamedArgs = Jsql.QFilterNamedArgs{}\n")
+		fn("// FNamedArgsSetReset is a function to reset FNamedArgs.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsSetReset() {\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs = nil\n")
+		fn("}\n\n")
+
+		fn("// FNamedArgsSet is a function to set locking method.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsSet(param ...Jsql.FilterNamedArg) {\n")
+		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs = append(" + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs, " + "param...)\n")
 		fn("}\n\n")
 
 		fn("// Locking is a function to set locking method.\n")
@@ -338,35 +335,6 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`	return lockingOperator` + "\n")
 		fn("}\n\n")
 
-		fn("// FieldAndValue is  function for get named arg for write query\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldAndValue() JOmap.SA {\n")
-		fn(`	sa := make(JOmap.SA)` + "\n")
-		fn(`	for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + `.QColumnFields {` + "\n")
-		fn(`		switch field {` + "\n")
-		for k, _ := range field {
-			fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "():\n")
-			fn(`			sa[field] = ` + JOstr.FirstCharToLower(t.Name()) + "." + k + "\n")
-		}
-		fn(`		}` + "\n")
-		fn("	}\n")
-		fn(`	return sa` + "\n")
-		fn("}\n\n")
-
-		fn("// FieldArgForUpdate is function get string to SET update\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix Jsql.PrefixNamedArgPG) string {\n")
-		fn(`	str := ""` + "\n")
-		fn(`	columns := ` + JOstr.FirstCharToLower(t.Name()) + ".FieldAndValue()\n")
-		fn(`	i := 1` + "\n")
-		fn(`	for k, _ := range columns {` + "\n")
-		fn(`		if i == len(columns) {` + "\n")
-		fn(`			str += k + " = " + string(prefix) + k` + "\n")
-		fn(`		` + "} else {\n")
-		fn(`			str += k + " = " + string(prefix) + k + ", "` + "\n")
-		fn(`		` + "}\n")
-		fn(`		i++` + "\n")
-		fn(`	` + "}\n")
-		fn(`	return str` + "\n")
-		fn("}\n\n")
 		err := os.WriteFile(param.FileName+"_GEN.go", buf.Bytes(), os.ModePerm)
 		jolly.PanicIF(err)
 
@@ -590,3 +558,33 @@ func makeInterfaceRepoImpl(param GeneratorModelForStructParam, caller *Jlog.Call
 	err = os.WriteFile(fileLocation, buf.Bytes(), os.ModePerm)
 	jolly.PanicIF(err)
 }
+
+// fn("// FieldAndValue is  function for get named arg for write query\n")
+// fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldAndValue() JOmap.SA {\n")
+// fn(`	sa := make(JOmap.SA)` + "\n")
+// fn(`	for _, field := range ` + JOstr.FirstCharToLower(t.Name()) + `.RQField {` + "\n")
+// fn(`		switch field {` + "\n")
+// for k, _ := range field {
+// 	fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "():\n")
+// 	fn(`			sa[field] = ` + JOstr.FirstCharToLower(t.Name()) + "." + k + "\n")
+// }
+// fn(`		}` + "\n")
+// fn("	}\n")
+// fn(`	return sa` + "\n")
+// fn("}\n\n")
+
+// fn("// FieldArgForUpdate is function get string to SET update\n")
+// fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix Jsql.PrefixNamedArgPG) string {\n")
+// fn(`	str := ""` + "\n")
+// fn(`	columns := ` + JOstr.FirstCharToLower(t.Name()) + ".FieldAndValue()\n")
+// fn(`	i := 1` + "\n")
+// fn(`	for k, _ := range columns {` + "\n")
+// fn(`		if i == len(columns) {` + "\n")
+// fn(`			str += k + " = " + string(prefix) + k` + "\n")
+// fn(`		` + "} else {\n")
+// fn(`			str += k + " = " + string(prefix) + k + ", "` + "\n")
+// fn(`		` + "}\n")
+// fn(`		i++` + "\n")
+// fn(`	` + "}\n")
+// fn(`	return str` + "\n")
+// fn("}\n\n")

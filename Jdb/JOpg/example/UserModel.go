@@ -2,6 +2,7 @@ package example
 
 import (
 	"github.com/SyaibanAhmadRamadhan/jolly/Jsql"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOmap"
 )
 
 type Audit struct {
@@ -14,13 +15,14 @@ type Audit struct {
 }
 
 type User struct {
-	ID               string `db:"id"`
-	RoleID           int    `db:"role_id"`
-	Username         string `db:"username"`
-	Email            string `db:"email"`
-	Password         string `db:"password"`
-	PhoneNumber      string `db:"phone_number"`
-	Audit            `db:"-"`
-	QColumnFields    []string
-	QFilterNamedArgs Jsql.QFilterNamedArgs
+	ID          string `db:"id"`
+	RoleID      int    `db:"role_id"`
+	Username    string `db:"username"`
+	Email       string `db:"email"`
+	Password    string `db:"password"`
+	PhoneNumber string `db:"phone_number"`
+	Audit       `db:"-"`
+	RQField     []string
+	WCField     JOmap.SA
+	FNamedArgs  Jsql.QFilterNamedArgs
 }

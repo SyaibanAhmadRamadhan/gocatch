@@ -20,29 +20,58 @@ func NewRDBMSpgx(conn *pgxpool.Pool) RDBMS {
 	}
 }
 
-func (r *rdbmsPgxImpl) Write(ctx context.Context, sql string, arguments ...any) (rowsAffected int64, err error) {
-	res, err := r.Exec(ctx, sql, arguments...)
-	if err != nil {
-		return
+func (r *rdbmsPgxImpl) Write(ctx context.Context, sql string, namedArg map[string]any) (rowsAffected int64, err error) {
+	if namedArg != nil {
+		args := pgx.NamedArgs(namedArg)
+		res, err := r.Exec(ctx, sql, args)
+		rowsAffected = res.RowsAffected()
+
+		if err != nil {
+			return 0, err
+		}
+
+	} else {
+		res, err := r.Exec(ctx, sql)
+		rowsAffected = res.RowsAffected()
+
+		if err != nil {
+			return 0, err
+		}
 	}
 
-	rowsAffected = res.RowsAffected()
+	return
 
+}
+
+func (r *rdbmsPgxImpl) QueryCount(ctx context.Context, sql string, namedArg map[string]any) (count int64, err error) {
+	if namedArg != nil {
+		args := pgx.NamedArgs(namedArg)
+		err = r.QueryRow(ctx, sql, args).Scan(&count)
+	} else {
+		err = r.QueryRow(ctx, sql).Scan(&count)
+	}
 	return
 }
 
-func (r *rdbmsPgxImpl) QueryCount(ctx context.Context, sql string, args ...any) (count int64, err error) {
-	err = r.QueryRow(ctx, sql, args...).Scan(&count)
+func (r *rdbmsPgxImpl) CheckOne(ctx context.Context, sql string, namedArg map[string]any) (b bool, err error) {
+	if namedArg != nil {
+		args := pgx.NamedArgs(namedArg)
+		err = r.QueryRow(ctx, sql, args).Scan(&b)
+	} else {
+		err = r.QueryRow(ctx, sql).Scan(&b)
+	}
 	return
 }
 
-func (r *rdbmsPgxImpl) CheckOne(ctx context.Context, sql string, args ...any) (b bool, err error) {
-	err = r.QueryRow(ctx, sql, args...).Scan(&b)
-	return
-}
+func (r *rdbmsPgxImpl) QueryAll(ctx context.Context, sql string, namedArg map[string]any) (results []map[string]any, err error) {
+	var rows pgx.Rows
+	if namedArg != nil {
+		args := pgx.NamedArgs(namedArg)
+		rows, err = r.Query(ctx, sql, args)
+	} else {
+		rows, err = r.Query(ctx, sql)
+	}
 
-func (r *rdbmsPgxImpl) QueryAll(ctx context.Context, sql string, args ...any) (results []map[string]any, err error) {
-	rows, err := r.Query(ctx, sql, args...)
 	if err != nil {
 		return
 	}
@@ -74,8 +103,15 @@ func (r *rdbmsPgxImpl) QueryAll(ctx context.Context, sql string, args ...any) (r
 	return
 }
 
-func (r *rdbmsPgxImpl) QueryOne(ctx context.Context, sql string, args ...any) (result map[string]any, err error) {
-	rows, err := r.Query(ctx, sql, args...)
+func (r *rdbmsPgxImpl) QueryOne(ctx context.Context, sql string, namedArg map[string]any) (result map[string]any, err error) {
+	var rows pgx.Rows
+	if namedArg != nil {
+		args := pgx.NamedArgs(namedArg)
+		rows, err = r.Query(ctx, sql, args)
+	} else {
+		rows, err = r.Query(ctx, sql)
+	}
+
 	if err != nil {
 		return
 	}

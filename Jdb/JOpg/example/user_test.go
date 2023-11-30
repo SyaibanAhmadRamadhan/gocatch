@@ -1,14 +1,11 @@
 package example
 
 import (
-	"context"
 	"fmt"
 	"testing"
 
-	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/SyaibanAhmadRamadhan/jolly"
 	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOpg"
 	"github.com/SyaibanAhmadRamadhan/jolly/Jsql"
 )
@@ -42,58 +39,73 @@ func initConn() {
 	rdbms = JOpg.NewRDBMSpgx(pool)
 }
 
-func create(user *User) {
-	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
-		value := user.FieldAndValue().JoinKey(string(Jsql.Pgx))
-		column := user.FieldAndValue().JoinKey()
-		sql := "INSERT INTO public.user (" + column + ") VALUES (" + value + ")"
-		fmt.Println(sql)
-		_, err := rdbms.Write(context.Background(), sql, pgx.NamedArgs(user.FieldAndValue()))
-		jolly.PanicIF(err)
-
-		return nil
-	})
-}
-
-func update(user *User) {
-	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
-		args, value := user.QFilterNamedArgs.ToQuery(true, Jsql.Pgx)
-		sql := "UPDATE public.user SET " + user.FieldArgForUpdate(Jsql.Pgx) + " " + args
-
-		fmt.Println(sql)
-		fieldValue := user.FieldAndValue()
-		fieldValue.Merge(value)
-
-		res, err := rdbms.Write(context.Background(), sql, pgx.NamedArgs(fieldValue))
-		jolly.PanicIF(err)
-		fmt.Println(res)
-
-		return nil
-	})
-}
+// func create(user *User) {
+// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
+// 		value := user.FieldAndValue().JoinKey(string(Jsql.Pgx))
+// 		column := user.FieldAndValue().JoinKey()
+// 		sql := "INSERT INTO public.user (" + column + ") VALUES (" + value + ")"
+// 		fmt.Println(sql)
+// 		_, err := rdbms.Write(context.Background(), sql, pgx.NamedArgs(user.FieldAndValue()))
+// 		jolly.PanicIF(err)
+//
+// 		return nil
+// 	})
+// }
+//
+// func update(user *User) {
+// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
+// 		args, value := user.FNamedArgs.ToQuery(true, Jsql.Pgx)
+// 		sql := "UPDATE public.user SET " + user.FieldArgForUpdate(Jsql.Pgx) + " " + args
+//
+// 		fmt.Println(sql)
+// 		fieldValue := user.FieldAndValue()
+// 		fieldValue.Merge(value)
+//
+// 		res, err := rdbms.Write(context.Background(), sql, pgx.NamedArgs(fieldValue))
+// 		jolly.PanicIF(err)
+// 		fmt.Println(res)
+//
+// 		return nil
+// 	})
+// }
 
 func setValueForCreate(user *User) {
 	user.SetUsername("ibann")
 	user.SetPassword("rama_password")
 }
 
-func setWhereCondition(user *User) {
-	user.SetArgFieldPassword("rama_password", Jsql.Equals, Jsql.And)
+// func setWhereCondition(user *User) {
+// 	user.SetArgFieldPassword("rama_password", Jsql.Equals, Jsql.And)
+// }
+
+func selectField() {
+	newUser := NewUser()
+	newUser.RQFieldSet(
+		newUser.FieldPassword(),
+		newUser.FieldUsername(),
+	)
+
+	newUser.FNamedArgsSet(
+		newUser.FNamedArgsRoleID("rama", Jsql.Equals, Jsql.And),
+	)
+
+	newUser.SetID("rama")
+	fmt.Println(newUser.RQField)
+	fmt.Println(newUser.WCField)
+	fmt.Println(newUser.FNamedArgs.ToQuery(true, Jsql.Pgx))
+
 }
 
 func TestUser(t *testing.T) {
-	initConn()
+	selectField()
+	// initConn()
 
-	newUser := NewUser()
-	newUser.SetColumn(
-		newUser.FieldPassword(),
-	)
-	setValueForCreate(newUser)
-	t.Log(newUser.QColumnFields)
-	setWhereCondition(newUser)
-
-	// create(newUser)
-	update(newUser)
+	// setValueForCreate(newUser)
+	// t.Log(newUser.RQField)
+	// setWhereCondition(newUser)
+	//
+	// // create(newUser)
+	// update(newUser)
 	// rows, err := rdbms.QueryAll(context.Background(), "SELECT phone_number, password, username FROM public.user")
 	// jolly.PanicIF(err)
 	//
