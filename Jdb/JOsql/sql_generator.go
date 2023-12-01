@@ -17,11 +17,14 @@ import (
 	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOstruct"
 )
 
+// SpecifiationTable is a struct that contains the specification of the table
+// schema name is optional
 type SpecifiationTable struct {
 	TableName  string
 	SchemaName string
 }
 
+// WithInterfaceRepo is a flag to generate interface repository
 type WithInterfaceRepo struct {
 	Make          bool
 	Dir           string
@@ -55,9 +58,6 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 	for _, param := range params {
 		if param.SpecifiationTable.TableName == "" {
 			panic("TableName is empty")
-		}
-		if param.SpecifiationTable.SchemaName == "" {
-			panic("SchemaName is empty")
 		}
 
 		if param.WithInterfaceRepo.Make {
@@ -124,10 +124,12 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`	return "` + param.SpecifiationTable.TableName + "\"\n")
 		fn("}\n\n")
 
-		fn("// SchemaName is a function to get schema name\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
-		fn(`	return "` + param.SpecifiationTable.SchemaName + "\"\n")
-		fn("}\n\n")
+		if param.SpecifiationTable.SchemaName != "" {
+			fn("// SchemaName is a function to get schema name\n")
+			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
+			fn(`	return "` + param.SpecifiationTable.SchemaName + "\"\n")
+			fn("}\n\n")
+		}
 
 		field := JOstruct.GetTagAndFieldNameFromStruct(param.Src, "", "db")
 		for k, v := range field {
