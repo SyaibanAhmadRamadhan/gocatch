@@ -1,4 +1,4 @@
-package jolly
+package gocatch
 
 import (
 	"math/rand"

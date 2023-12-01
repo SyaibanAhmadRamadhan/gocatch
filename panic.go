@@ -1,4 +1,4 @@
-package jolly
+package gocatch
 
 func PanicIF(err error) {
 	if err != nil {

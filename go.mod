@@ -1,4 +1,4 @@
-module github.com/SyaibanAhmadRamadhan/jolly
+module github.com/SyaibanAhmadRamadhan/gocatch
 
 go 1.21
 

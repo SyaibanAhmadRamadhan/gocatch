@@ -1,4 +1,4 @@
-# JOLLY
+# GOCATCH
 
 [//]: # (This is a Go-based project developed to perform several database operations and migrations featuring an intuitive command line interface.)
 
