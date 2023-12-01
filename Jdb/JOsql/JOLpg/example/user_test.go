@@ -6,8 +6,10 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 
-	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOpg"
-	"github.com/SyaibanAhmadRamadhan/jolly/Jsql"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOsql"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOsql/JOLpg"
+
+	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOstr"
 )
 
 var user1 = map[string]any{
@@ -23,10 +25,10 @@ var user2 = map[string]any{
 }
 
 var pool *pgxpool.Pool
-var rdbms JOpg.RDBMS
+var rdbms JOsql.RDBMS
 
 func initConn() {
-	confPG := JOpg.PostgresConf{
+	confPG := JOLpg.PostgresConf{
 		User:     "root",
 		Password: "root",
 		Host:     "localhost",
@@ -34,14 +36,14 @@ func initConn() {
 		DB:       "jolly",
 		SSL:      "disable",
 	}
-	pool = JOpg.PgxNewConnection(confPG, true)
+	pool = JOLpg.PgxNewConnection(confPG, true)
 
-	rdbms = JOpg.NewRDBMSpgx(pool)
+	rdbms = JOLpg.NewRDBMSpgx(pool)
 }
 
 // func create(user *User) {
-// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
-// 		value := user.FieldAndValue().JoinKey(string(Jsql.Pgx))
+// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOLpg.RDBMS) error {
+// 		value := user.FieldAndValue().JoinKey(string(JOsql.Pgx))
 // 		column := user.FieldAndValue().JoinKey()
 // 		sql := "INSERT INTO public.user (" + column + ") VALUES (" + value + ")"
 // 		fmt.Println(sql)
@@ -53,9 +55,9 @@ func initConn() {
 // }
 //
 // func update(user *User) {
-// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOpg.RDBMS) error {
-// 		args, value := user.FNamedArgs.ToQuery(true, Jsql.Pgx)
-// 		sql := "UPDATE public.user SET " + user.FieldArgForUpdate(Jsql.Pgx) + " " + args
+// 	_ = rdbms.BeginRun(context.Background(), func(rdbms JOLpg.RDBMS) error {
+// 		args, value := user.FNamedArgs.ToQuery(true, JOsql.Pgx)
+// 		sql := "UPDATE public.user SET " + user.FieldArgForUpdate(JOsql.Pgx) + " " + args
 //
 // 		fmt.Println(sql)
 // 		fieldValue := user.FieldAndValue()
@@ -75,7 +77,7 @@ func setValueForCreate(user *User) {
 }
 
 // func setWhereCondition(user *User) {
-// 	user.SetArgFieldPassword("rama_password", Jsql.Equals, Jsql.And)
+// 	user.SetArgFieldPassword("rama_password", JOsql.Equals, JOsql.And)
 // }
 
 func selectField() {
@@ -85,19 +87,38 @@ func selectField() {
 		newUser.FieldUsername(),
 	)
 
-	newUser.FNamedArgsSet(
-		newUser.FNamedArgsRoleID("rama", Jsql.Equals, Jsql.And),
-	)
+	// newUser.FNamedArgsSet(
+	// 	newUser.FNamedArgsRoleID("rama", JOsql.Equals, JOsql.And),
+	// )
 
 	newUser.SetID("rama")
 	fmt.Println(newUser.RQField)
 	fmt.Println(newUser.WCField)
-	fmt.Println(newUser.FNamedArgs.ToQuery(true, Jsql.Pgx))
+	fmt.Println(newUser.FNamedArgs.ToQuery(true, JOsql.Pgx))
 
 }
 
 func TestUser(t *testing.T) {
-	selectField()
+	// selectField()
+
+	newUser := NewUser()
+
+	newUser.FNamedArgsSet(
+		newUser.Where(newUser.FieldID(), JOsql.In, "name, rama"),
+		newUser.OrWhere(newUser.FieldUsername(), JOsql.In, "name, rama"),
+		newUser.Where(newUser.FieldID(), JOsql.NotIn, "name, rama"),
+		newUser.OrWhere(newUser.FieldUsername(), JOsql.NotIn, "name, rama"),
+	)
+	newUser.FNamedArgsSet(
+		newUser.Where(newUser.FieldID(), JOsql.IsNull, "name, rama"),
+		newUser.OrWhere(newUser.FieldUsername(), JOsql.IsNotNull, "name, rama"),
+		newUser.Where(newUser.FieldID(), JOsql.Like, "name, rama"),
+		newUser.OrWhere(newUser.FieldUsername(), JOsql.NotLike, "name, rama"),
+		newUser.Where(newUser.FieldID(), JOsql.Where, "name, rama"),
+		newUser.OrWhere(newUser.FieldUsername(), JOsql.Where, "name, rama"),
+		newUser.Where(JOstr.EmptyString, JOsql.FullTextSearch, "name, rama"),
+	)
+	t.Log(newUser.FNamedArgs.ToQuery(true, JOsql.Pgx))
 	// initConn()
 
 	// setValueForCreate(newUser)

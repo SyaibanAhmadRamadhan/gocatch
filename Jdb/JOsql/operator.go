@@ -1,4 +1,17 @@
-package Jsql
+package JOsql
+
+type ClausaWhereSql string
+
+const (
+	Where          ClausaWhereSql = "WHERE"
+	FullTextSearch ClausaWhereSql = "full_text_search"
+	In             ClausaWhereSql = "IN"
+	NotIn          ClausaWhereSql = "NOT IN"
+	IsNull         ClausaWhereSql = "IS NULL"
+	IsNotNull      ClausaWhereSql = "IS NOT NULL"
+	Like           ClausaWhereSql = "LIKE"
+	NotLike        ClausaWhereSql = "NOT LIKE"
+)
 
 // ComparisonOperator is a string type used to denote SQL comparison operators.
 type ComparisonOperator string
@@ -10,12 +23,6 @@ const (
 
 	// NotEquals represents the SQL "<>" operator.
 	NotEquals ComparisonOperator = "<>"
-
-	// Like represents the SQL "LIKE" operator.
-	Like ComparisonOperator = "LIKE"
-
-	// NotLike represents the SQL "NOT LIKE" operator.
-	NotLike ComparisonOperator = "NOT LIKE"
 
 	// GreaterThan represents the SQL ">" operator.
 	GreaterThan ComparisonOperator = ">"
@@ -40,12 +47,6 @@ const (
 
 	// AfterOrEqual is a semantics alias for GreaterOrEqual.
 	AfterOrEqual = GreaterOrEqual
-
-	// IsNull represents the SQL "IS NULL" operator.
-	IsNull ComparisonOperator = "IS NULL"
-
-	// IsNotNull represents the SQL "IS NOT NULL" operator.
-	IsNotNull ComparisonOperator = "IS NOT NULL"
 )
 
 // LogicalOperator is a string type used to denote SQL logical operators.

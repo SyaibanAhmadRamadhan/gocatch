@@ -1,4 +1,4 @@
-package Jsql
+package JOsql
 
 import (
 	"bufio"

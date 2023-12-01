@@ -1,17 +1,17 @@
 package example
 
 import (
-	"github.com/SyaibanAhmadRamadhan/jolly/Jsql"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOsql"
 	"github.com/SyaibanAhmadRamadhan/jolly/Jtype/JOmap"
 )
 
 type Audit struct {
-	CreatedAt Jsql.NullString `db:"created_at"`
-	UpdatedAt Jsql.NullInt64  `db:"updated_at"`
-	CreatedBy string          `db:"created_by"`
-	UpdatedBy Jsql.NullString `db:"updated_by"`
-	DeletedAt Jsql.NullInt64  `db:"deleted_at"`
-	DeletedBy Jsql.NullString `db:"deleted_by"`
+	CreatedAt JOsql.NullString `db:"created_at"`
+	UpdatedAt JOsql.NullInt64  `db:"updated_at"`
+	CreatedBy string           `db:"created_by"`
+	UpdatedBy JOsql.NullString `db:"updated_by"`
+	DeletedAt JOsql.NullInt64  `db:"deleted_at"`
+	DeletedBy JOsql.NullString `db:"deleted_by"`
 }
 
 type User struct {
@@ -24,5 +24,5 @@ type User struct {
 	Audit       `db:"-"`
 	RQField     []string
 	WCField     JOmap.SA
-	FNamedArgs  Jsql.QFilterNamedArgs
+	FNamedArgs  JOsql.QFilterNamedArgs
 }

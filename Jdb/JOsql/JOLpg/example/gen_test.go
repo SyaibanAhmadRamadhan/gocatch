@@ -3,14 +3,14 @@ package example
 import (
 	"testing"
 
-	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOpg"
+	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOsql"
 )
 
 func TestGenerateStruct(t *testing.T) {
-	userModel := JOpg.GeneratorModelForStructParam{
+	userModel := JOsql.GeneratorModelForStructParam{
 		Src:      &User{},
 		FileName: "UserModel",
-		SpecifiationTable: JOpg.SpecifiationTable{
+		SpecifiationTable: JOsql.SpecifiationTable{
 			TableName:  "user",
 			SchemaName: "public",
 		},
@@ -26,5 +26,5 @@ func TestGenerateStruct(t *testing.T) {
 		// },
 	}
 
-	JOpg.GeneratorModelForStruct(userModel)
+	JOsql.GeneratorModelForStruct(userModel)
 }

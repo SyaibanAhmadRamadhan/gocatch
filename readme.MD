@@ -16,6 +16,8 @@ This project makes use of the following external Go Libraries:
 
 5. [ulid](https://github.com/oklog/ulid) - A Go library for generete ulid, click link for detail information.
 
+6. [zerolog](https://github.com/rs/zerolog) - A Go library for Logging, click link for detail information.
+
 ## Releases
 
 Releases should follow [Semver](http://semver.org/) though the first couple of releases are `v1` and `v1.1`.  Example `v1.2.1`

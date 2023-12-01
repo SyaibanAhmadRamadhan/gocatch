@@ -1,4 +1,8 @@
-package Jsql
+package JOsql
+
+import (
+	"strings"
+)
 
 // FilterNamedArg struct is an abstraction that represents named argument filters for SQL queries.
 // Each FilterNamedArg has a Value, NamedArg, ComparisonOperator, and a LogicalOperator.
@@ -8,6 +12,7 @@ type FilterNamedArg struct {
 	NamedArg    string
 	Comparasion ComparisonOperator
 	Logical     LogicalOperator
+	Type        ClausaWhereSql
 }
 
 // QFilterNamedArgs is a map that associates a name of a column (as string) with a FilterNamedArg struct.
@@ -23,33 +28,70 @@ type QFilterNamedArgs []FilterNamedArg
 // If value is empty, it will not be made into a string.
 // firstWhere is a boolean that determines whether the WHERE keyword should be prepended to the query string.
 // If QFIltersNamed is empty, it will return an empty string and an empty map.
-func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefixNamedArg PrefixNamedArgPG) (query string, namedArgs map[string]any) {
+func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefix PrefixNamedArgPG) (query string, namedArgs map[string]any) {
 	if firstWhere && len(q) > 0 {
 		query += "WHERE "
 	}
 
 	namedArgs = make(map[string]any)
-	i := 0
-	totalFilters := len(q)
 	for _, filter := range q {
-		i++
 
-		if filter.Comparasion == IsNotNull || filter.Comparasion == IsNull {
-			query += filter.Column + " " + string(filter.Comparasion) + " "
-		} else if filter.Value != nil {
-			if filter.NamedArg == "" {
-				filter.NamedArg = filter.Column
+		switch filter.Type {
+		case FullTextSearch:
+			namedArgs["full_text_search"] = filter.Value
+		case In, NotIn:
+			if filter.Value == nil {
+				continue
 			}
-			query += filter.Column + " " + string(filter.Comparasion) + " " + string(prefixNamedArg) + filter.NamedArg + " "
+			val, ok := filter.Value.([]string)
+			if ok {
+				filter.Value = strings.Join(val, ", ")
+			}
+
+			if filter.Logical != "" {
+				query += string(filter.Logical) + " "
+			}
+			query += filter.Column + " " + string(filter.Type) + " (" + string(prefix) + filter.NamedArg + ") "
 			namedArgs[filter.NamedArg] = filter.Value
-		}
-
-		if i != totalFilters && filter.Value != nil {
-			if filter.Logical == "" {
-				filter.Logical = And
+		case IsNull, IsNotNull:
+			if filter.Logical != "" {
+				query += string(filter.Logical) + " "
 			}
-			query += string(filter.Logical) + " "
+			query += filter.Column + " " + string(filter.Type) + " "
+		case Like, NotLike:
+			if filter.Value == nil {
+				continue
+			}
+
+			if filter.Logical != "" {
+				query += string(filter.Logical) + " "
+			}
+			query += filter.Column + " " + string(filter.Type) + " %" + string(prefix) + filter.NamedArg + "% "
+			namedArgs[filter.NamedArg] = filter.Value
+		default:
+			if filter.Comparasion == "" {
+				filter.Comparasion = Equals
+			}
+
+			if filter.Value == nil {
+				continue
+			}
+
+			if filter.Logical != "" {
+				query += string(filter.Logical) + " "
+			}
+			query += filter.Column + " " + string(filter.Comparasion) + " " + string(prefix) + filter.NamedArg + " "
 		}
+		// if filter.Comparasion == IsNotNull || filter.Comparasion == IsNull {
+		// 	query += filter.Column + " " + string(filter.Comparasion) + " "
+		// } else if filter.Value != nil {
+		// 	if filter.NamedArg == "" {
+		// 		filter.NamedArg = filter.Column
+		// 	}
+		// 	query += filter.Column + " " + string(filter.Comparasion) + " " + string(prefix) + filter.NamedArg + " "
+		// 	namedArgs[filter.NamedArg] = filter.Value
+		// }
+
 	}
 
 	return

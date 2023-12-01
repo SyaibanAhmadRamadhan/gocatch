@@ -1,4 +1,4 @@
-package JOpg
+package JOsql
 
 // TxOptions are transaction modes within a transaction block
 type TxOptions struct {

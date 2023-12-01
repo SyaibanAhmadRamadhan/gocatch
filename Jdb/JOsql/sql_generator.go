@@ -1,4 +1,4 @@
-package JOpg
+package JOsql
 
 import (
 	"bytes"
@@ -142,34 +142,34 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 			// SetField
 			fn("// Set" + k + " is a setter for the field or column " + k + " in the table " + t.Name() + ".\n")
 			switch typeStruct {
-			case "Jsql.NullString":
+			case "JOsql.NullString":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) {\n")
-			case "Jsql.NullBool":
+			case "JOsql.NullBool":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) {\n")
-			case "Jsql.NullFloat64":
+			case "JOsql.NullFloat64":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) {\n")
-			case "Jsql.NullInt64":
+			case "JOsql.NullInt64":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) {\n")
-			case "Jsql.NullInt32":
+			case "JOsql.NullInt32":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) {\n")
-			case "Jsql.NullByte":
+			case "JOsql.NullByte":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) {\n")
-			case "Jsql.NullTime":
+			case "JOsql.NullTime":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) {\n")
-			case "Jsql.NullInt16":
+			case "JOsql.NullInt16":
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) {\n")
 			default:
 				fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") {\n")
 			}
 
-			if typeStruct == "Jsql.NullString" ||
-				typeStruct == "Jsql.NullBool" ||
-				typeStruct == "Jsql.NullFloat64" ||
-				typeStruct == "Jsql.NullInt64" ||
-				typeStruct == "Jsql.NullInt32" ||
-				typeStruct == "Jsql.NullByte" ||
-				typeStruct == "Jsql.NullTime" ||
-				typeStruct == "Jsql.NullInt16" {
+			if typeStruct == "JOsql.NullString" ||
+				typeStruct == "JOsql.NullBool" ||
+				typeStruct == "JOsql.NullFloat64" ||
+				typeStruct == "JOsql.NullInt64" ||
+				typeStruct == "JOsql.NullInt32" ||
+				typeStruct == "JOsql.NullByte" ||
+				typeStruct == "JOsql.NullTime" ||
+				typeStruct == "JOsql.NullInt16" {
 				fn(`	` + JOstr.FirstCharToLower(t.Name()) + "." + k + " = " + strings.ReplaceAll(typeStruct, ".", ".New") + "(&param)" + "\n")
 			} else {
 				fn(`	` + JOstr.FirstCharToLower(t.Name()) + "." + k + " = param" + "\n")
@@ -180,20 +180,20 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 			fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".WCField[" + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()] = param\n")
 			fn("}\n\n")
 
-			fn("// FNamedArgs" + k + " sets the value, comparison operator, and logical operator for an argument field.\n")
-			fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgs" + k +
-				"(value any, comparasion Jsql.ComparisonOperator, logical Jsql.LogicalOperator) Jsql.FilterNamedArg {\n")
-			fn(`	namedArg := ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "() + \"_namedarg\"\n")
-			fn("\n")
-			fn(`	return Jsql.FilterNamedArg{` + "\n")
-			fn(`		Column:      ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()," + "\n")
-			fn(`		Value:       value,` + "\n")
-			fn(`		NamedArg:    namedArg,` + "\n")
-			fn(`		Comparasion: comparasion,` + "\n")
-			fn(`		Logical:     logical,` + "\n")
-			fn(`	}` + "\n")
-			fn("\n")
-			fn("}\n\n")
+			// fn("// FNamedArgs" + k + " sets the value, comparison operator, and logical operator for an argument field.\n")
+			// fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgs" + k +
+			// 	"(value any, comparasion JOsql.ComparisonOperator, logical JOsql.LogicalOperator) JOsql.FilterNamedArg {\n")
+			// fn(`	namedArg := ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "() + \"_namedarg\"\n")
+			// fn("\n")
+			// fn(`	return JOsql.FilterNamedArg{` + "\n")
+			// fn(`		Column:      ` + JOstr.FirstCharToLower(t.Name()) + ".Field" + k + "()," + "\n")
+			// fn(`		Value:       value,` + "\n")
+			// fn(`		NamedArg:    namedArg,` + "\n")
+			// fn(`		Comparasion: comparasion,` + "\n")
+			// fn(`		Logical:     logical,` + "\n")
+			// fn(`	}` + "\n")
+			// fn("\n")
+			// fn("}\n\n")
 		}
 
 		fn("// AllField is a function to get all field or column in the table " + t.Name() + ".\n")
@@ -214,35 +214,35 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 			typeStruct := strings.Split(v, "|")[1]
 			fn(`		case ` + JOstr.FirstCharToLower(t.Name()) + `.Field` + k + `():` + "\n")
 			switch typeStruct {
-			case "Jsql.NullString":
+			case "JOsql.NullString":
 				fn(`			val, ok := value.(` + "string)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type string. field ` + k + `")` + "\n")
-			case "Jsql.NullBool":
+			case "JOsql.NullBool":
 				fn(`			val, ok := value.(` + "bool)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type bool. field ` + k + `")` + "\n")
-			case "Jsql.NullFloat64":
+			case "JOsql.NullFloat64":
 				fn(`			val, ok := value.(` + "float64)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type float64. field ` + k + `")` + "\n")
-			case "Jsql.NullInt64":
+			case "JOsql.NullInt64":
 				fn(`			val, ok := value.(` + "int64)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int64. field ` + k + `")` + "\n")
-			case "Jsql.NullInt32":
+			case "JOsql.NullInt32":
 				fn(`			val, ok := value.(` + "int32)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int32. field ` + k + `")` + "\n")
-			case "Jsql.NullByte":
+			case "JOsql.NullByte":
 				fn(`			val, ok := value.(` + "byte)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type byte. field ` + k + `")` + "\n")
-			case "Jsql.NullTime":
+			case "JOsql.NullTime":
 				fn(`			val, ok := value.(` + "time.Time)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type time.Time. field ` + k + `")` + "\n")
-			case "Jsql.NullInt16":
+			case "JOsql.NullInt16":
 				fn(`			val, ok := value.(` + "int16)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int16. field ` + k + `")` + "\n")
@@ -320,19 +320,58 @@ func GeneratorModelForStruct(params ...GeneratorModelForStructParam) {
 		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".RQField = []string{}\n")
 		fn("}\n\n")
 
-		fn("// FNamedArgsSetReset is a function to reset FNamedArgs.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsSetReset() {\n")
+		fn("// FNamedArgsReset is a function to reset FNamedArgs.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsReset() {\n")
 		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs = nil\n")
 		fn("}\n\n")
 
-		fn("// FNamedArgsSet is a function to set locking method.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsSet(param ...Jsql.FilterNamedArg) {\n")
+		fn("// FNamedArgsSet is a function to set FNamedArgs.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FNamedArgsSet(param ...JOsql.FilterNamedArg) {\n")
+		fn(`	if len(` + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs) < 1 {\n")
+		fn(`		if len(param) > 0` + " {\n")
+		fn(`			param[0].Logical = ""` + "\n")
+		fn("		}\n")
+		fn("	}\n")
 		fn(`	` + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs = append(" + JOstr.FirstCharToLower(t.Name()) + ".FNamedArgs, " + "param...)\n")
 		fn("}\n\n")
 
 		fn("// Locking is a function to set locking method.\n")
-		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Locking(lockingOperator Jsql.LockingOperator) Jsql.LockingOperator {\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") Locking(lockingOperator JOsql.LockingOperator) JOsql.LockingOperator {\n")
 		fn(`	return lockingOperator` + "\n")
+		fn("}\n\n")
+
+		fn("// Where is a function to set AND field.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() +
+			") Where(column string, clause JOsql.ClausaWhereSql, value any, comparasion ...JOsql.ComparisonOperator) JOsql.FilterNamedArg {\n")
+		fn(`	comp := ""` + "\n")
+		fn(`	if comparasion != nil {` + "\n")
+		fn(`		comp = string(comparasion[0])` + "\n")
+		fn(`	}` + "\n\n")
+		fn(`	return JOsql.FilterNamedArg{ ` + "\n")
+		fn(`		Column:      column,` + "\n")
+		fn(`		Value:       value,` + "\n")
+		fn(`		NamedArg:    column + "_named_argument",` + "\n")
+		fn(`		Comparasion: JOsql.ComparisonOperator(comp),` + "\n")
+		fn(`		Logical:     JOsql.And,` + "\n")
+		fn(`		Type:        clause,` + "\n")
+		fn(`	}` + "\n")
+		fn("}\n\n")
+
+		fn("// OrWhere is a function to set OR field.\n")
+		fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() +
+			") OrWhere(column string, clause JOsql.ClausaWhereSql, value any, comparasion ...JOsql.ComparisonOperator) JOsql.FilterNamedArg {\n")
+		fn(`	comp := ""` + "\n")
+		fn(`	if comparasion != nil {` + "\n")
+		fn(`		comp = string(comparasion[0])` + "\n")
+		fn(`	}` + "\n\n")
+		fn(`	return JOsql.FilterNamedArg{ ` + "\n")
+		fn(`		Column:      column,` + "\n")
+		fn(`		Value:       value,` + "\n")
+		fn(`		NamedArg:    column + "_named_argument",` + "\n")
+		fn(`		Comparasion: JOsql.ComparisonOperator(comp),` + "\n")
+		fn(`		Logical:     JOsql.Or,` + "\n")
+		fn(`		Type:        clause,` + "\n")
+		fn(`	}` + "\n")
 		fn("}\n\n")
 
 		err := os.WriteFile(param.FileName+"_GEN.go", buf.Bytes(), os.ModePerm)
@@ -574,7 +613,7 @@ func makeInterfaceRepoImpl(param GeneratorModelForStructParam, caller *Jlog.Call
 // fn("}\n\n")
 
 // fn("// FieldArgForUpdate is function get string to SET update\n")
-// fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix Jsql.PrefixNamedArgPG) string {\n")
+// fn(`func (` + JOstr.FirstCharToLower(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix JOsql.PrefixNamedArgPG) string {\n")
 // fn(`	str := ""` + "\n")
 // fn(`	columns := ` + JOstr.FirstCharToLower(t.Name()) + ".FieldAndValue()\n")
 // fn(`	i := 1` + "\n")

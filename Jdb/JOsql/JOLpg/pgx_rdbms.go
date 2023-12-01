@@ -1,4 +1,4 @@
-package JOpg
+package JOLpg
 
 import (
 	"context"
@@ -6,6 +6,8 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/SyaibanAhmadRamadhan/jolly/Jdb/JOsql"
 )
 
 type rdbmsPgxImpl struct {
@@ -13,7 +15,7 @@ type rdbmsPgxImpl struct {
 	PgxCommander
 }
 
-func NewRDBMSpgx(conn *pgxpool.Pool) RDBMS {
+func NewRDBMSpgx(conn *pgxpool.Pool) JOsql.RDBMS {
 	return &rdbmsPgxImpl{
 		conn:         conn,
 		PgxCommander: conn,
@@ -141,7 +143,7 @@ func (r *rdbmsPgxImpl) QueryOne(ctx context.Context, sql string, namedArg map[st
 	return
 }
 
-func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMS) error) (err error) {
+func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms JOsql.RDBMS) error) (err error) {
 	tx, err := r.Begin(ctx)
 
 	if err != nil {
@@ -172,7 +174,7 @@ func (r *rdbmsPgxImpl) BeginRun(ctx context.Context, fn func(rdbms RDBMS) error)
 	return err
 }
 
-func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts TxOptions, fn func(rdbms RDBMS) error) (err error) {
+func (r *rdbmsPgxImpl) BeginTxRun(ctx context.Context, opts JOsql.TxOptions, fn func(rdbms JOsql.RDBMS) error) (err error) {
 	tx, err := r.conn.BeginTx(ctx, pgx.TxOptions{
 		IsoLevel:       pgx.TxIsoLevel(opts.IsoLevel),
 		AccessMode:     pgx.TxAccessMode(opts.AccessMode),

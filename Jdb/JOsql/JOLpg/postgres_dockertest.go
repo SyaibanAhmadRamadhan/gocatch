@@ -1,4 +1,4 @@
-package JOpg
+package JOLpg
 
 import (
 	"strconv"
