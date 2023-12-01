@@ -81,6 +81,7 @@ func (q QFilterNamedArgs) ToQuery(firstWhere bool, prefix PrefixNamedArgPG) (que
 				query += string(filter.Logical) + " "
 			}
 			query += filter.Column + " " + string(filter.Comparasion) + " " + string(prefix) + filter.NamedArg + " "
+			namedArgs[filter.NamedArg] = filter.Value
 		}
 		// if filter.Comparasion == IsNotNull || filter.Comparasion == IsNull {
 		// 	query += filter.Column + " " + string(filter.Comparasion) + " "
