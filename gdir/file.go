@@ -1,4 +1,4 @@
-package JOFD
+package gdir
 
 import (
 	"bufio"
@@ -7,8 +7,11 @@ import (
 	"strings"
 )
 
+// GetModuleName reads the go.mod file in the project root,
+// extracts the module name from it, and returns the module name.
+// If the module name is not found, or an error occurs, it returns an error.
 func GetModuleName() (moduleName string, err error) {
-	dir, err := FindGoModPath()
+	dir, err := LocateGoModDirectory()
 	if err != nil {
 		return
 	}

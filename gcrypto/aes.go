@@ -1,4 +1,4 @@
-package Jcrypto
+package gcrypto
 
 import (
 	"crypto/aes"
@@ -11,6 +11,9 @@ import (
 	"strings"
 )
 
+// GenerateKey takes a string input and generates a 32 characters key.
+// Whitespaces from the string are removed and if the resulting string length is less than 32,
+// zeros are appended at the end until its length is exactly 32.
 func GenerateKey(str string) string {
 	str = strings.ReplaceAll(str, " ", "")
 	if len(str) < 32 {
@@ -19,6 +22,8 @@ func GenerateKey(str string) string {
 	return str[:32]
 }
 
+// AesDecryptCFB uses Cipher Feedback Mode (CFB) decryption and decrypts the given encrypted text using the provided 32 characters key.
+// It returns the decrypted text or an error if any occurred during the decryption process.
 func AesDecryptCFB(text string, key string) (str string, err error) {
 	if len(key) > 32 {
 		err = errors.New("key len must be 32")
@@ -49,6 +54,8 @@ func AesDecryptCFB(text string, key string) (str string, err error) {
 	return
 }
 
+// AesEncryptCFB uses Cipher Feedback Mode (CFB) for encryption and encrypts the given text with the provided 32 characters key.
+// It returns the hex-encoded encrypted cipherText or an error.
 func AesEncryptCFB(text string, key string) (str string, err error) {
 	if len(key) > 32 {
 		err = errors.New("key len must be 32")

@@ -1,15 +1,15 @@
-package JOstruct
+package gstruct
 
 import (
 	"reflect"
 )
 
-// GetTagAndFieldNameFromStruct is a function to extract the tag and field name
-// from a struct. If a field within the struct includes the tag "ignore", it will be
-// skipped. If the tag is "-", it means that it will enter the nested struct fields
-// and the prefix used here will be from the parameter, not from the tag of the nested struct.
-// map result is a key value pair of field name and tag. ex : {"ID":"id|JOsql.NullString"}
-func GetTagAndFieldNameFromStruct(src any, prefix string, tag string) (s map[string]string) {
+// ExtractStructTagsAndFields takes a struct and returns a map of its field names
+// and their respective tags, excluding those tagged with "ignore". It handles nested
+// struct fields designated with the tag "-".
+// The map result is a key value pair of field name and tag. ex : {"ID":"id|int64","Name":"name|string"}
+// Nested is not supported.
+func ExtractStructTagsAndFields(src any, prefix string, tag string) (s map[string]string) {
 	var val reflect.Value
 
 	if reflect.ValueOf(src).Kind() == reflect.Ptr {
@@ -48,17 +48,20 @@ func GetTagAndFieldNameFromStruct(src any, prefix string, tag string) (s map[str
 				panic("nested struct is not supported")
 			}
 			if fieldTag == "-" {
-				res := GetTagAndFieldNameFromStruct(val.Field(i).Interface(), prefix, tag)
+				res := ExtractStructTagsAndFields(val.Field(i).Interface(), prefix, tag)
 				for k, v := range res {
 					s[k] = v
 				}
 			} else {
-				res := GetTagAndFieldNameFromStruct(val.Field(i).Interface(), fieldTag+".", tag)
+				res := ExtractStructTagsAndFields(val.Field(i).Interface(), fieldTag+".", tag)
 				for k, v := range res {
 					s[k] = v
 				}
 			}
 		default:
+			if fieldTag == "-" {
+				continue
+			}
 			if fieldTag != "" {
 				s[field.Name] = fieldTag + "|" + field.Type.String()
 			}

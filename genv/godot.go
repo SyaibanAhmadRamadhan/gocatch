@@ -1,4 +1,4 @@
-package Jenv
+package genv
 
 import (
 	"errors"
@@ -6,7 +6,12 @@ import (
 	"github.com/joho/godotenv"
 )
 
-func InitGodotEnv(envOverride bool) error {
+/*
+godotEnv loads environment variables from '.env' files using godotenv.
+It searches multiple directories for the '.env' file. If 'envOverride' is true, it also loads '.env.override'.
+On success, it returns nil. On failure, it returns an error.
+*/
+func godotEnv(envOverride bool) error {
 	dir := []string{"./", "../", "../../", "../../../", "../../../../", "../../../../../"}
 	for _, v := range dir {
 		err := godotenv.Overload(v + ".env")

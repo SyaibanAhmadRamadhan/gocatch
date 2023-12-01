@@ -1,4 +1,4 @@
-package JOFD
+package gdir
 
 import (
 	"fmt"
@@ -7,8 +7,11 @@ import (
 	"strings"
 )
 
-func FindDirPathFileFromGoModule(filename string) (dir string, err error) {
-	rootPath, err := FindGoModPath()
+// FindDirPathOfFileFromGoMod finds the relative path of the directory containing the filename in a Go module.
+// It first locates the Go module directory, then it traverses the directory tree within this module.
+// If it finds the file, it returns the relative path of its directory. If it fails, it returns an error.
+func FindDirPathOfFileFromGoMod(filename string) (dir string, err error) {
+	rootPath, err := LocateGoModDirectory()
 	if err != nil {
 		return
 	}
@@ -18,6 +21,7 @@ func FindDirPathFileFromGoModule(filename string) (dir string, err error) {
 			return fmt.Errorf("failure accessing a path %q: %v\n", path, err)
 		}
 
+		// If the info points to a file and so it has the same name as the filename, get the relative path of the directory
 		if !info.IsDir() && strings.HasSuffix(info.Name(), filename) {
 			dir, err = filepath.Rel(rootPath, filepath.Dir(path))
 			if err != nil {
@@ -31,7 +35,9 @@ func FindDirPathFileFromGoModule(filename string) (dir string, err error) {
 	return
 }
 
-func FindGoModPath() (string, error) {
+// LocateGoModDirectory finds the directory containing the go.mod file, starting from the current working directory and moving up.
+// It returns the path of the directory or an error if it's not found.
+func LocateGoModDirectory() (string, error) {
 	dir, err := os.Getwd()
 	if err != nil {
 		return "", err
