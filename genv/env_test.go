@@ -3,12 +3,17 @@ package genv
 import (
 	"os"
 	"testing"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
 func TestInitialize(t *testing.T) {
 	defer func() {
-		os.Remove("./.env")
-		os.Remove("./.env.override")
+		err := os.Remove("./.env")
+		gcommon.PanicIfError(err)
+
+		err = os.Remove("./.env.override")
+		gcommon.PanicIfError(err)
 	}()
 
 	// Create .env and .env.override files for testing

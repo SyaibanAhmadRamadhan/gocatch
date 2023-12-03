@@ -31,14 +31,14 @@ func ExtractStructTagsAndFields(src any, prefix string, tag string) (s map[strin
 		fieldTag := field.Tag.Get(tag)
 		switch val.Field(i).Kind() {
 		case reflect.Struct:
-			if field.Type.String() == "JOsql.NullString" ||
-				field.Type.String() == "JOsql.NullBool" ||
-				field.Type.String() == "JOsql.NullFloat64" ||
-				field.Type.String() == "JOsql.NullInt64" ||
-				field.Type.String() == "JOsql.NullInt32" ||
-				field.Type.String() == "JOsql.NullByte" ||
-				field.Type.String() == "JOsql.NullTime" ||
-				field.Type.String() == "JOsql.NullInt16" {
+			if field.Type.String() == "gsql.NullString" ||
+				field.Type.String() == "gsql.NullBool" ||
+				field.Type.String() == "gsql.NullFloat64" ||
+				field.Type.String() == "gsql.NullInt64" ||
+				field.Type.String() == "gsql.NullInt32" ||
+				field.Type.String() == "gsql.NullByte" ||
+				field.Type.String() == "gsql.NullTime" ||
+				field.Type.String() == "gsql.NullInt16" {
 				if fieldTag != "" {
 					s[field.Name] = fieldTag + "|" + field.Type.String()
 				}

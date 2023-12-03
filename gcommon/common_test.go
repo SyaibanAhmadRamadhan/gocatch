@@ -11,5 +11,5 @@ func TestPanicIfError(t *testing.T) {
 			t.Errorf("The code did not panic")
 		}
 	}()
-	PanicIfError(errors.New("Test error"))
+	PanicIfError(errors.New("test error"))
 }

@@ -32,7 +32,7 @@ func (s StrAny) ConcatKeys(ps ...string) string {
 	}
 
 	var saArr []string
-	for k, _ := range s {
+	for k := range s {
 		saArr = append(saArr, prefix+k)
 	}
 

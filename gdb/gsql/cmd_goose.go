@@ -1,4 +1,4 @@
-package JOsql
+package gsql
 
 import (
 	"bufio"
@@ -11,16 +11,14 @@ import (
 
 	"github.com/pressly/goose/v3"
 
-	"github.com/SyaibanAhmadRamadhan/jolly"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
 // ConnForMigrate opens a new database connection using the supplied driver and URL.
 // It uses the goose library to open the connection and panics in case of any errors.
 func ConnForMigrate(url string, driver string) *sql.DB {
 	db, err := goose.OpenDBWithDriver(driver, url)
-	if err != nil {
-		jolly.PanicIF(err)
-	}
+	gcommon.PanicIfError(err)
 
 	return db
 }
@@ -64,16 +62,16 @@ func Migrate(cmd string, arg string, dir string, seq bool, db *sql.DB) {
 		err = goose.Create(db, dir, arg, "go")
 	case "up-to":
 		argInt, err := strconv.Atoi(arg)
-		jolly.PanicIF(err)
+		gcommon.PanicIfError(err)
 		err = goose.UpTo(db, dir, int64(argInt))
 	case "down-to":
 		argInt, err := strconv.Atoi(arg)
-		jolly.PanicIF(err)
+		gcommon.PanicIfError(err)
 		err = goose.DownTo(db, dir, int64(argInt))
 	default:
 		err = goose.Status(db, dir)
 	}
-	jolly.PanicIF(err)
+	gcommon.PanicIfError(err)
 }
 
 // cmdMigrateMaster provides an interface to the user to enter migration commands.

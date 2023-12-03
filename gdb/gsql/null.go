@@ -1,4 +1,4 @@
-package JOsql
+package gsql
 
 import (
 	"database/sql"

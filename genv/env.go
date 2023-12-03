@@ -10,8 +10,6 @@ const DefaultEnvLib EnvLib = "godotenv"
 // by default godotenv
 func Initialize(envLib EnvLib, envOverride bool) error {
 	switch envLib {
-	case DefaultEnvLib:
-		return godotEnv(envOverride)
 	default:
 		return godotEnv(envOverride)
 	}

@@ -1,10 +1,10 @@
-package Jdb
+package gdb
 
 import (
 	"github.com/ory/dockertest/v3"
 	"github.com/ory/dockertest/v3/docker"
 
-	"github.com/SyaibanAhmadRamadhan/jolly"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
 type DockerTest struct {
@@ -15,19 +15,19 @@ type DockerTest struct {
 
 func (d *DockerTest) CleanUp() {
 	for _, resource := range d.Resources {
-		jolly.PanicIF(d.Pool.Purge(resource))
+		gcommon.PanicIfError(d.Pool.Purge(resource))
 	}
-	jolly.PanicIF(d.Pool.Client.RemoveNetwork(d.Network.ID))
+	gcommon.PanicIfError(d.Pool.Client.RemoveNetwork(d.Network.ID))
 }
 
 func (d *DockerTest) NewContainer(options *dockertest.RunOptions, checkFunc func(res *dockertest.Resource) error) {
 	resource, err := d.Pool.RunWithOptions(options)
-	jolly.PanicIF(err)
+	gcommon.PanicIfError(err)
 
 	err = d.Pool.Retry(func() error {
 		return checkFunc(resource)
 	})
-	jolly.PanicIF(err)
+	gcommon.PanicIfError(err)
 
 	d.Resources = append(d.Resources, resource)
 }
@@ -57,7 +57,7 @@ func NewDockerPool() *dockertest.Pool {
 
 func NewDockerNetwork(pool *dockertest.Pool) *docker.Network {
 	network, err := pool.Client.CreateNetwork(docker.CreateNetworkOptions{
-		Name: "dockertest-" + jolly.RandomString(10),
+		Name: "dockertest-" + gcommon.RandomAlphabeticString(10),
 	})
 	if err != nil {
 		panic(err)
