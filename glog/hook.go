@@ -1,4 +1,4 @@
-package Jlog
+package glog
 
 import (
 	"fmt"

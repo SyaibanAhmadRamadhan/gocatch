@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/SyaibanAhmadRamadhan/gocatch/Jlog"
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
+	"github.com/SyaibanAhmadRamadhan/gocatch/glog"
 	"github.com/SyaibanAhmadRamadhan/gocatch/gstr"
 	"github.com/SyaibanAhmadRamadhan/gocatch/gstruct"
 )
@@ -83,7 +83,7 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		}
 
 		t := reflect.TypeOf(param.Src).Elem()
-		caller := Jlog.CallerInfo(2)
+		caller := glog.CallerInfo(2)
 		packageName := gstr.GetLastSubstring(caller.PackageName, "/")
 		fn(`package ` + packageName + "\n\n")
 
