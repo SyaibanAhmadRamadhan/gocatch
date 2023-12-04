@@ -46,12 +46,12 @@ The `gcrypto` directory is home to all cryptographic related functions. It inclu
 - [HMAC hash generation](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/hmac.go)
 - [bcrypt for password hashing](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/bcyrpt.go)
 
-## [gdb](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb)
+## [ginfra](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/ginfra)
 
 This directory contains the database-related functionalities of the project. It can be further divided into:
 
 - [gsql](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql): Contains functions related to SQL based databases. SQLx and PGX are majorly used here. and codegen for struct generation.
-- [gPOSTGRES](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql/gPOSTGRE): A dedicated directory for PostgreSQL related operations.
+- [gpostgre](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql/gpostgre): A dedicated directory for PostgreSQL related operations.
 
 ## [gdir](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdir)
 

@@ -1,4 +1,4 @@
-package gPOSTGRE
+package gpostgre
 
 import (
 	"context"

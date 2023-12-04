@@ -1,4 +1,4 @@
-package gPOSTGRE
+package gpostgre
 
 import (
 	"context"
@@ -11,13 +11,13 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest/v3"
 
-	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb"
 	"github.com/SyaibanAhmadRamadhan/gocatch/gdb/gsql"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
 func TestPostgresDockerTest(t *testing.T) {
-	dockerTest := gdb.InitDockerTest()
+	dockerTest := ginfra.InitDockerTest()
 	defer dockerTest.CleanUp()
 
 	postgresDockerTest := PostgresDockerTestConf{}

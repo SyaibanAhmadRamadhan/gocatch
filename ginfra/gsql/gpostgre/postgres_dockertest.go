@@ -1,4 +1,4 @@
-package gPOSTGRE
+package gpostgre
 
 import (
 	"fmt"
@@ -10,7 +10,6 @@ import (
 	"github.com/ory/dockertest/v3"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb"
 )
 
 type PostgresDockerTestConf struct {
@@ -22,7 +21,7 @@ type PostgresDockerTestConf struct {
 	SSL      string
 
 	ResourceExpired uint
-	pool            *gdb.DockerTest
+	pool            *ginfra.DockerTest
 	image           string
 }
 
@@ -31,7 +30,7 @@ func (p *PostgresDockerTestConf) DBURL() string {
 		p.Host, p.Port, p.User, p.Password, p.DB, p.SSL)
 }
 
-func (p *PostgresDockerTestConf) ImageVersion(pool *gdb.DockerTest, version string) *dockertest.RunOptions {
+func (p *PostgresDockerTestConf) ImageVersion(pool *ginfra.DockerTest, version string) *dockertest.RunOptions {
 	p.pool = pool
 	p.InitConf(version)
 

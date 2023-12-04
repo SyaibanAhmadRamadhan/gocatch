@@ -1,4 +1,4 @@
-package gdb
+package ginfra
 
 import (
 	"github.com/ory/dockertest/v3"

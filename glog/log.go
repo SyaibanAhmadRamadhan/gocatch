@@ -8,9 +8,7 @@ import (
 	"time"
 )
 
-// KeyExecutionTime and KeyRepoLayer are predefined keys for log context.
-const KeyExecutionTime = "execution_time"
-const KeyRepoLayer = "repo_layer"
+// KeyExecutionTime and keyRepoLayer are predefined keys for log context.
 
 // Msg struct is a representation of a log message structure to be used in logging
 type Msg struct {
@@ -77,8 +75,13 @@ func CallerInfo(skip ...int) (caller *CallInfo) {
 }
 
 // CallerInfoStr function retrieves caller information as string format
-func CallerInfoStr() string {
-	caller := CallerInfo(2)
+func CallerInfoStr(skip ...int) string {
+	skipCount := 1
+	if len(skip) > 0 {
+		skipCount = skip[0]
+	}
+
+	caller := CallerInfo(skipCount)
 	return caller.PackageName + " " + caller.FileName + " " +
 		caller.FuncName + ":" + fmt.Sprintf("%d", caller.Line)
 }

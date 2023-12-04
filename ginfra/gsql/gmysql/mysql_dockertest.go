@@ -1,4 +1,4 @@
-package gMYSQL
+package gmysql
 
 import (
 	"fmt"
@@ -9,7 +9,6 @@ import (
 	"github.com/ory/dockertest/v3"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb"
 )
 
 type MysqlDockerTestConf struct {
@@ -20,7 +19,7 @@ type MysqlDockerTestConf struct {
 	DB       string
 
 	ResourceExpired uint
-	pool            *gdb.DockerTest
+	pool            *ginfra.DockerTest
 	image           string
 }
 
@@ -34,7 +33,7 @@ func (p *MysqlDockerTestConf) UriWithOutDB() string {
 		p.User, p.Password, p.Host, p.Port)
 }
 
-func (p *MysqlDockerTestConf) ImageVersion(pool *gdb.DockerTest, maridb bool, version string) *dockertest.RunOptions {
+func (p *MysqlDockerTestConf) ImageVersion(pool *ginfra.DockerTest, maridb bool, version string) *dockertest.RunOptions {
 	p.pool = pool
 	p.InitConf(version)
 
