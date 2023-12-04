@@ -9,6 +9,7 @@ import (
 	"github.com/ory/dockertest/v3"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
 )
 
 type MysqlDockerTestConf struct {

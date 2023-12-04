@@ -11,7 +11,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest/v3"
 
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb/gsql"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gsql"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
