@@ -3,7 +3,7 @@ package example
 import (
 	"testing"
 
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb/gsql"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gsql"
 )
 
 func TestGenerateStruct(t *testing.T) {

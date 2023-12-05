@@ -1,7 +1,7 @@
 package example
 
 import (
-	"github.com/SyaibanAhmadRamadhan/gocatch/gdb/gsql"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gsql"
 )
 
 type Audit struct {

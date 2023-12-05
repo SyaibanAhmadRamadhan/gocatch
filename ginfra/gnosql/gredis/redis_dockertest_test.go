@@ -20,11 +20,13 @@ func TestPostgresDockerTest(t *testing.T) {
 	redisDockerTestConf := RedisDockerTestConf{}
 
 	var client rueidis.Client
+	var adapter *RueidisAdapter
 
 	dockerTest.NewContainer(redisDockerTestConf.ImageVersion(dockerTest, ""), func(res *dockertest.Resource) error {
 		time.Sleep(2 * time.Second)
 		conn, err := redisDockerTestConf.ConnectRueidis(res)
-		client = conn
+		client = conn.Conn
+		adapter = conn
 		gcommon.PanicIfError(err)
 
 		return nil
@@ -32,10 +34,12 @@ func TestPostgresDockerTest(t *testing.T) {
 
 	ctx := context.Background()
 	// SET key val NX
-	err := client.Do(ctx, client.B().Set().Key("key").Value("val").Nx().Build()).Error()
+	err := adapter.Hset(ctx, "asd", "field1", "asd").Error()
 	gcommon.PanicIfError(err)
+	errStr, _ := adapter.Hsetnx(ctx, "asd", "field1", "asd").ToInt64()
+	fmt.Println(errStr)
 	// HGETALL hm
-	key, err := client.Do(ctx, client.B().Mget().Key("key").Build()).ToArray()
+	key, err := client.Do(ctx, client.B().Hgetall().Key("asd").Build()).ToMap()
 	gcommon.PanicIfError(err)
 	fmt.Println(key)
 

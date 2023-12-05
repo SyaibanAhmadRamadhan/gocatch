@@ -41,7 +41,7 @@ func (p *RedisDockerTestConf) ImageVersion(pool *ginfra.DockerTest, version stri
 	return options
 }
 
-func (p *RedisDockerTestConf) ConnectRueidis(resource *dockertest.Resource) (conn rueidis.Client, err error) {
+func (p *RedisDockerTestConf) ConnectRueidis(resource *dockertest.Resource) (adapter *RueidisAdapter, err error) {
 	if p.ResourceExpired != 0 {
 		resource.Expire(p.ResourceExpired)
 	}
@@ -55,7 +55,7 @@ func (p *RedisDockerTestConf) ConnectRueidis(resource *dockertest.Resource) (con
 	p.Host = strings.Split(hostAndPort, ":")[0]
 	p.Port = port
 
-	conn = OpenConnRuedis(rueidis.ClientOption{
+	adapter = OpenConnRueidis(rueidis.ClientOption{
 		InitAddress: []string{hostAndPort},
 		Password:    p.Password,
 		SelectDB:    p.DB,

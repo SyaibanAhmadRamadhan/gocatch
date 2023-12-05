@@ -94,10 +94,10 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		importSrc := r.FindString(string(res))
 
 		customImport := fmt.Sprintf(
-			`(%s%s%s%s`,
+			`(%s%s`,
 			"\n\t\"errors\"",
-			"\n\t\"fmt\"",
-			"\n\t\"strings\"",
+			// "\n\t\"fmt\"",
+			// "\n\t\"strings\"",
 			"\n",
 		)
 
