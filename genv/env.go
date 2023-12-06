@@ -1,5 +1,9 @@
 package genv
 
+import (
+	"os"
+)
+
 type EnvLib string
 
 const DefaultEnvLib EnvLib = "godotenv"
@@ -13,4 +17,16 @@ func Initialize(envLib EnvLib, envOverride bool) error {
 	default:
 		return godotEnv(envOverride)
 	}
+}
+
+func GetEnv(key string, defaultValue ...string) string {
+	v, ok := os.LookupEnv(key)
+	if !ok {
+		if len(defaultValue) > 0 {
+			return defaultValue[0]
+		}
+		return ""
+	}
+
+	return v
 }
