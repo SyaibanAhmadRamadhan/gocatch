@@ -13,7 +13,7 @@ import (
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
 )
 
-func TestPostgresDockerTest(t *testing.T) {
+func TestRedisDockerTest(t *testing.T) {
 	dockerTest := ginfra.InitDockerTest()
 	defer dockerTest.CleanUp()
 
