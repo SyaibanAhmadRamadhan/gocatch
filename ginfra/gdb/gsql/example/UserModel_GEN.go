@@ -1,11 +1,9 @@
 package example
 
-// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/jolly/blob/main/Jdb/JOpg/postgres_generator.go. 
+// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/jolly/blob/main/Jdb/JOpg/postgres_generator.go.
 
 import (
 	"errors"
-
-	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gsql"
 )
 
 // NewUser is a struct with pointer that represents the table User in the database.
@@ -35,7 +33,7 @@ func (u *User) FieldCreatedAt() string {
 
 // SetCreatedAt is a setter for the field or column CreatedAt in the table User.
 func (u *User) SetCreatedAt(param string) {
-	u.CreatedAt = gsql.NewNullString(&param)
+	u.CreatedAt = Gsql.NewNullString(&param)
 }
 
 // FieldUpdatedAt is a field or column in the table User.
@@ -45,7 +43,7 @@ func (u *User) FieldUpdatedAt() string {
 
 // SetUpdatedAt is a setter for the field or column UpdatedAt in the table User.
 func (u *User) SetUpdatedAt(param int64) {
-	u.UpdatedAt = gsql.NewNullInt64(&param)
+	u.UpdatedAt = Gsql.NewNullInt64(&param)
 }
 
 // FieldID is a field or column in the table User.
@@ -85,7 +83,7 @@ func (u *User) FieldUpdatedBy() string {
 
 // SetUpdatedBy is a setter for the field or column UpdatedBy in the table User.
 func (u *User) SetUpdatedBy(param string) {
-	u.UpdatedBy = gsql.NewNullString(&param)
+	u.UpdatedBy = Gsql.NewNullString(&param)
 }
 
 // FieldDeletedBy is a field or column in the table User.
@@ -95,7 +93,7 @@ func (u *User) FieldDeletedBy() string {
 
 // SetDeletedBy is a setter for the field or column DeletedBy in the table User.
 func (u *User) SetDeletedBy(param string) {
-	u.DeletedBy = gsql.NewNullString(&param)
+	u.DeletedBy = Gsql.NewNullString(&param)
 }
 
 // FieldRoleID is a field or column in the table User.
@@ -145,12 +143,12 @@ func (u *User) FieldDeletedAt() string {
 
 // SetDeletedAt is a setter for the field or column DeletedAt in the table User.
 func (u *User) SetDeletedAt(param int64) {
-	u.DeletedAt = gsql.NewNullInt64(&param)
+	u.DeletedAt = Gsql.NewNullInt64(&param)
 }
 
 // AllField is a function to get all field or column in the table User.
 func (u *User) AllField() (str []string) {
-	str = []string{ 
+	str = []string{
 		`role_id`,
 		`username`,
 		`password`,
@@ -283,4 +281,3 @@ func (u *User) ScanMap(data map[string]any) (err error) {
 	}
 	return nil
 }
-

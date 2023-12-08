@@ -24,7 +24,7 @@ type MongoDockerTestConf struct {
 }
 
 func (m *MongoDockerTestConf) URI() string {
-	return fmt.Sprintf("mongodb://%s:%s@%s:%s", m.Username, m.Password, m.Host, m.Port)
+	return fmt.Sprintf("mongodb://%s:%s@%s:%s/?replicaSet=rs0", m.Username, m.Password, m.Host, m.Port)
 }
 
 func (m *MongoDockerTestConf) ImageVersion(pool *ginfra.DockerTest, version string) *dockertest.RunOptions {
@@ -39,6 +39,7 @@ func (m *MongoDockerTestConf) ImageVersion(pool *ginfra.DockerTest, version stri
 			`MONGO_INITDB_ROOT_USERNAME=` + m.Username,
 			`MONGO_INITDB_ROOT_PASSWORD=` + m.Password,
 		},
+		Cmd: []string{"--replSet", "rs0", "--bind_ip_all"},
 	}
 }
 

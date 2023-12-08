@@ -10,8 +10,7 @@ import (
 )
 
 func OpenConnMongoClient(uri string) (*mongo.Client, error) {
-	clientOpt := options.Client()
-	clientOpt.ApplyURI(uri)
+	clientOpt := options.Client().ApplyURI(uri)
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
