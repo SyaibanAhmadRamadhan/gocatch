@@ -13,6 +13,7 @@ import (
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
 func TestPostgresDockerTest(t *testing.T) {
@@ -36,7 +37,7 @@ func TestPostgresDockerTest(t *testing.T) {
 	})
 
 	asd := NewRdbmsPgx(pool)
-	asd2 := Gsql.NewSqlxCommander(db)
+	asd2 := gsql.NewSqlxCommander(db)
 
 	_ = asd.BeginRun(context.Background(), func(tx Commander) error {
 		_, err := tx.Exec(context.Background(),
@@ -56,7 +57,7 @@ func TestPostgresDockerTest(t *testing.T) {
 				return nil
 			})
 
-			_ = asd2.BeginTxRun(context.Background(), nil, func(tx Gsql.Commander) error {
+			_ = asd2.BeginTxRun(context.Background(), nil, func(tx gsql.Commander) error {
 				_, err := tx.ExecContext(context.Background(), "INSERT INTO users (username, password, email, created_on, last_login) VALUES ('test', 'test', '', NOW(), NOW());")
 				gcommon.PanicIfError(err)
 				return nil

@@ -2,17 +2,19 @@ package example
 
 import (
 	"testing"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
 func TestGenerateStruct(t *testing.T) {
-	userModel := Gsql.GeneratorModelForStructParam{
+	userModel := gsql.GeneratorModelForStructParam{
 		Src:      &User{},
 		FileName: "UserModel",
-		SpecifiationTable: Gsql.SpecifiationTable{
+		SpecifiationTable: gsql.SpecifiationTable{
 			TableName:  "user",
 			SchemaName: "public",
 		},
 	}
 
-	Gsql.GeneratorModelFromStruct(userModel)
+	gsql.GeneratorModelFromStruct(userModel)
 }
