@@ -5,118 +5,69 @@ import (
 	"database/sql"
 
 	"github.com/jmoiron/sqlx"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
 type Commander interface {
 	QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error)
 	ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
-	NamedQuery(query string, arg interface{}) (*sqlx.Rows, error)
+	NamedQueryContext(ctx context.Context, query string, arg interface{}) (*sqlx.Rows, error)
 	NamedExecContext(ctx context.Context, query string, arg interface{}) (sql.Result, error)
 }
 
-type RDBMS interface {
-	BeginTxRun(ctx context.Context, opts *sql.TxOptions, fn func(t Commander) error) error
-	Commander
-}
-
-type commanderImpl struct {
+type sqlxCommander struct {
 	db *sqlx.DB
 }
 
-func (c *commanderImpl) QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error) {
-	stmt, err := c.db.PreparexContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			// TODO log error
-		}
-	}()
-
-	return stmt.QueryxContext(ctx, args...)
-}
-
-func (c *commanderImpl) ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
-	stmt, err := c.db.PrepareContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			// TODO log error
-		}
-	}()
-
-	return c.db.ExecContext(ctx, query, args...)
-}
-
-func (c *commanderImpl) NamedQuery(query string, arg interface{}) (*sqlx.Rows, error) {
-	stmt, err := c.db.PrepareNamed(query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			// TODO log error
-		}
-	}()
-
-	return stmt.Queryx(arg)
-}
-
-func (c *commanderImpl) NamedExecContext(ctx context.Context, query string, arg interface{}) (sql.Result, error) {
-	stmt, err := c.db.PrepareNamedContext(ctx, query)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err := stmt.Close(); err != nil {
-			// TODO log error
-		}
-	}()
-
-	return stmt.ExecContext(ctx, arg)
-}
-
-type sqlxRdbms struct {
-	db *sqlx.DB
-	Commander
-}
-
-func NewSqlxCommander(db *sqlx.DB) RDBMS {
-	return &sqlxRdbms{
-		Commander: &commanderImpl{
-			db: db,
-		},
+func NewSqlxCommander(db *sqlx.DB) Commander {
+	return &sqlxCommander{
 		db: db,
 	}
 }
 
-func (s *sqlxRdbms) BeginTxRun(ctx context.Context, opts *sql.TxOptions, fn func(t Commander) error) error {
-	tx, err := s.db.BeginTxx(ctx, opts)
-	if err != nil {
-		return err
+func (c *sqlxCommander) QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.QueryxContext(ctx, query, args...)
 	}
 
-	defer func() {
-		if p := recover(); p != nil {
-			if err := tx.Rollback(); err != nil {
-				// TODO log error
-			}
-			panic(p)
-		} else if err != nil {
-			if err := tx.Rollback(); err != nil {
-				// TODO log error
-			}
-		} else {
-			if err = tx.Commit(); err != nil {
-				// TODO log error
-			}
-		}
-	}()
+	return c.db.QueryxContext(ctx, query, args...)
+}
 
-	err = fn(tx)
+func (c *sqlxCommander) ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.ExecContext(ctx, query, args...)
+	}
 
-	return err
+	return c.db.ExecContext(ctx, query, args...)
+}
+
+func (c *sqlxCommander) NamedQueryContext(ctx context.Context, query string, arg interface{}) (*sqlx.Rows, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.NamedQuery(query, arg)
+	}
+
+	return c.db.NamedQueryContext(ctx, query, arg)
+}
+
+func (c *sqlxCommander) NamedExecContext(ctx context.Context, query string, arg interface{}) (sql.Result, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.NamedExecContext(ctx, query, arg)
+	}
+
+	return c.db.NamedExecContext(ctx, query, arg)
+}
+
+func (c *sqlxCommander) extractTx(ctx context.Context) (tx *sqlx.Tx) {
+	val := ctx.Value(gdb.TxKey{})
+
+	if tx, ok := val.(*sqlx.Tx); tx != nil && ok {
+		return tx
+	}
+
+	return nil
 }

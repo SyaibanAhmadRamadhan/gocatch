@@ -12,6 +12,7 @@ import (
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
@@ -32,10 +33,11 @@ func TestMysqlDockerTest(t *testing.T) {
 		return nil
 	})
 
-	asd := gsql.NewSqlxCommander(db)
+	sqlxCommander := gsql.NewSqlxCommander(db)
+	sqlxTx := gdb.NewTxSqlx(db)
 
-	_ = asd.BeginTxRun(context.Background(), nil, func(tx gsql.Commander) error {
-		_, err := tx.ExecContext(context.Background(),
+	_ = sqlxTx.DoTransaction(context.Background(), nil, func(c context.Context) error {
+		_, err := sqlxCommander.ExecContext(c,
 			"CREATE TABLE IF NOT EXISTS users (id serial PRIMARY KEY, username VARCHAR ( 50 ) NOT NULL, password VARCHAR ( 50 ) NOT NULL, email VARCHAR ( 255 ) NOT NULL, created_on TIMESTAMP NOT NULL, last_login TIMESTAMP);")
 		gcommon.PanicIfError(err)
 		return nil
@@ -46,8 +48,8 @@ func TestMysqlDockerTest(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		go func() {
-			_ = asd.BeginTxRun(context.Background(), nil, func(tx gsql.Commander) error {
-				_, err := tx.ExecContext(context.Background(), "INSERT INTO users (username, password, email, created_on, last_login) VALUES ('test', 'test', '', NOW(), NOW());")
+			_ = sqlxTx.DoTransaction(context.Background(), nil, func(c context.Context) error {
+				_, err := sqlxCommander.ExecContext(c, "INSERT INTO users (username, password, email, created_on, last_login) VALUES ('test', 'test', '', NOW(), NOW());")
 				gcommon.PanicIfError(err)
 				return nil
 			})
@@ -57,11 +59,11 @@ func TestMysqlDockerTest(t *testing.T) {
 
 	wg.Wait()
 
-	rows, err := asd.QueryxContext(context.Background(), "SELECT * FROM users;")
+	rows, err := sqlxCommander.QueryxContext(context.Background(), "SELECT * FROM users;")
 	fmt.Println(rows)
 	gcommon.PanicIfError(err)
 
-	rows, err = asd.QueryxContext(context.Background(), "SELECT COUNT(*) FROM users;")
+	rows, err = sqlxCommander.QueryxContext(context.Background(), "SELECT COUNT(*) FROM users;")
 	gcommon.PanicIfError(err)
 	var count int
 
