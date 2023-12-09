@@ -80,15 +80,25 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		r, _ := regexp.Compile(`import \(([^)]+)\)`)
 		importSrc := r.FindString(string(res))
 
-		customImport := fmt.Sprintf(
-			`(%s%s`,
-			"\n\t\"errors\"",
-			// "\n\t\"fmt\"",
-			// "\n\t\"strings\"",
-			"\n",
-		)
+		if importSrc == "" {
+			importSrc = fmt.Sprintf(
+				`import (%s%s`,
+				"\n\t\"errors\"",
+				// "\n\t\"fmt\"",
+				// "\n\t\"strings\"",
+				"\n)",
+			)
+		} else {
+			customImport := fmt.Sprintf(
+				`(%s%s`,
+				"\n\t\"errors\"",
+				// "\n\t\"fmt\"",
+				// "\n\t\"strings\"",
+				"\n",
+			)
+			importSrc = strings.Replace(importSrc, "(", customImport, 1)
+		}
 
-		importSrc = strings.Replace(importSrc, "(", customImport, 1)
 		fn(importSrc + "\n\n")
 
 		fn("// New" + t.Name() + " is a struct with pointer that represents the table " + t.Name() + " in the database.\n")
