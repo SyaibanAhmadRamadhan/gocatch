@@ -24,77 +24,120 @@ This project utilises the following external Go libraries:
 
 9. [pq](https://github.com/lib/pq) - A driver and toolkit for PostgreSQL.
 
+10. [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) - The Go driver for MongoDB. This driver provides a simple, consistent API to MongoDB from Go applications.
+
+11. [rueidis](https://github.com/redis/rueidis) - A Redis client library for Go that focuses on simplicity, correctness, and performance.
 ## Releases
 
 Releases should follow the [Semantic Versioning](http://semver.org/) guidelines. The first couple of releases are `v1` and `v1.1`, with subsequent examples like `v1.2.1`.
 
-# Project Folders
+[//]: # (# Project Folders)
 
-This project is organized into several directories, each containing a different aspect of the code base.
-## [gcommon](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gcommon)
-This directory contains common utility functions that can be used throughout the project. It includes functionalities like:
+[//]: # ()
+[//]: # (This project is organized into several directories, each containing a different aspect of the code base.)
 
-- [Ternary functions](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/ternary.go)
-- [Panic related utilities](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/common.go)
-- [Random string creation](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/random.go)
+[//]: # (## [gcommon]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gcommon&#41;)
 
-## [gcrypto](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gcrypto)
+[//]: # (This directory contains common utility functions that can be used throughout the project. It includes functionalities like:)
 
-The `gcrypto` directory is home to all cryptographic related functions. It includes but not limited to:
+[//]: # ()
+[//]: # (- [Ternary functions]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/ternary.go&#41;)
 
-- [AES encryption and decryption](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/aes.go)
-- [HMAC hash generation](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/hmac.go)
-- [bcrypt for password hashing](https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/bcyrpt.go)
+[//]: # (- [Panic related utilities]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/common.go&#41;)
 
-## [ginfra](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/ginfra)
+[//]: # (- [Random string creation]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcommon/random.go&#41;)
 
-This directory contains the database-related functionalities of the project. It can be further divided into:
+[//]: # ()
+[//]: # (## [gcrypto]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gcrypto&#41;)
 
-- [gsql](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql): Contains functions related to SQL based databases. SQLx and PGX are majorly used here. and codegen for struct generation.
-- [gpostgre](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql/gpostgre): A dedicated directory for PostgreSQL related operations.
+[//]: # ()
+[//]: # (The `gcrypto` directory is home to all cryptographic related functions. It includes but not limited to:)
 
-## [gdir](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdir)
+[//]: # ()
+[//]: # (- [AES encryption and decryption]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/aes.go&#41;)
 
-The `gdir` directory contains functions related to:
+[//]: # (- [HMAC hash generation]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/hmac.go&#41;)
 
-- Finding path from go module
-- Find go module & getting module name
+[//]: # (- [bcrypt for password hashing]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/gcrypto/bcyrpt.go&#41;)
 
-## [genv](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/genv)
+[//]: # ()
+[//]: # (## [ginfra]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/ginfra&#41;)
 
-This directory is utilized for:
+[//]: # ()
+[//]: # (This directory contains the database-related functionalities of the project. It can be further divided into:)
 
-- Initializing and handling .env variables
+[//]: # ()
+[//]: # (- [gsql]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql&#41;: Contains functions related to SQL based databases. SQLx and PGX are majorly used here. and codegen for struct generation.)
 
-## [glog](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/glog)
+[//]: # (- [gpostgre]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdb/gsql/gpostgre&#41;: A dedicated directory for PostgreSQL related operations.)
 
-Under this directory, you will find:
+[//]: # ()
+[//]: # (## [gdir]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gdir&#41;)
 
-- Canonical logging line utilities, predominantly using zerolog
+[//]: # ()
+[//]: # (The `gdir` directory contains functions related to:)
 
-## [gmap](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gmap)
+[//]: # ()
+[//]: # (- Finding path from go module)
 
-This directory simply contains:
+[//]: # (- Find go module & getting module name)
 
-- Various map related utility functions
+[//]: # ()
+[//]: # (## [genv]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/genv&#41;)
 
-## [gstr](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gstr)
+[//]: # ()
+[//]: # (This directory is utilized for:)
 
-Here you have:
+[//]: # ()
+[//]: # (- Initializing and handling .env variables)
 
-- Various string manipulation and handling functions
+[//]: # ()
+[//]: # (## [glog]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/glog&#41;)
 
-## [gstruct](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gstruct)
+[//]: # ()
+[//]: # (Under this directory, you will find:)
 
-It provides functionalities to:
+[//]: # ()
+[//]: # (- Canonical logging line utilities, predominantly using zerolog)
 
-- Get struct tag values
-- Get struct field names
-- Get struct type
+[//]: # ()
+[//]: # (## [gmap]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gmap&#41;)
 
-## [gtime](https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gtime)
+[//]: # ()
+[//]: # (This directory simply contains:)
 
-This directory is dedicated to time related utilities:
+[//]: # ()
+[//]: # (- Various map related utility functions)
 
-- Tracking execution time of a function
-- Formatting time duration from nanoseconds to days.
+[//]: # ()
+[//]: # (## [gstr]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gstr&#41;)
+
+[//]: # ()
+[//]: # (Here you have:)
+
+[//]: # ()
+[//]: # (- Various string manipulation and handling functions)
+
+[//]: # ()
+[//]: # (## [gstruct]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gstruct&#41;)
+
+[//]: # ()
+[//]: # (It provides functionalities to:)
+
+[//]: # ()
+[//]: # (- Get struct tag values)
+
+[//]: # (- Get struct field names)
+
+[//]: # (- Get struct type)
+
+[//]: # ()
+[//]: # (## [gtime]&#40;https://github.com/SyaibanAhmadRamadhan/gocatch/tree/main/gtime&#41;)
+
+[//]: # ()
+[//]: # (This directory is dedicated to time related utilities:)
+
+[//]: # ()
+[//]: # (- Tracking execution time of a function)
+
+[//]: # (- Formatting time duration from nanoseconds to days.)
