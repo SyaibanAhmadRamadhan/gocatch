@@ -1,4 +1,4 @@
-package example
+package example_gen
 
 import (
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"

@@ -1,4 +1,4 @@
-package example
+package example_gen
 
 // var user1 = map[string]any{
 // 	"username":     "rama1",

@@ -1,4 +1,4 @@
-package gsql
+package gdb
 
 import (
 	"bytes"
@@ -16,23 +16,10 @@ import (
 
 // SpecifiationTable is a struct that contains the specification of the table
 // schema name is optional
+// TableName is table name in sql or collection name in nosql or index name in search db
 type SpecifiationTable struct {
 	TableName  string
 	SchemaName string
-}
-
-// WithInterfaceRepo is a flag to generate interface repository
-type WithInterfaceRepo struct {
-	Make          bool
-	Dir           string
-	InterfaceName string
-	Lib           string // use pgx or sqlx. if you want generates with sqlx, you must set Lib to "sqlx", default is "pgx"
-}
-
-type WithInterfaceImplRepo struct {
-	Make              bool
-	ImplLocationDir   string
-	ImplInterfaceName string
 }
 
 // GeneratorModelForStructParam defines the parameters
@@ -40,8 +27,8 @@ type WithInterfaceImplRepo struct {
 type GeneratorModelForStructParam struct {
 	Src               any               // Src is the struct instance
 	SpecifiationTable SpecifiationTable // SpecifiationTable is the struct instance that contains the specification of the table
-
-	FileName string // FileName is the name of generated source file without extension
+	Tag               string            // by default tag is db tag
+	FileName          string            // FileName is the name of generated source file without extension
 }
 
 // GeneratorModelFromStruct generates methods for given structs.
@@ -135,7 +122,10 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		gsqlNullTime := "gsql.NullTime"
 		gsqlNullInt16 := "gsql.NullInt16"
 
-		field := gstruct.ExtractStructTagsAndFields(param.Src, "", "db")
+		if param.Tag == "" {
+			param.Tag = "db"
+		}
+		field := gstruct.ExtractStructTagsAndFields(param.Src, "", param.Tag)
 		for k, v := range field {
 			typeStruct := strings.Split(v, "|")[1]
 
