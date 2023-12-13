@@ -1,6 +1,7 @@
 package gcommon
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -24,4 +25,14 @@ func TestRandomNumericString(t *testing.T) {
 	if len(result) != 6 {
 		t.Errorf("Expected length 6, but got %v", len(result))
 	}
+}
+
+func TestRandomFromArray(t *testing.T) {
+	tagIDs := []string{"tag1", "tag2", "tag3"}
+	result := RandomFromArray(tagIDs)
+	fmt.Println(result)
+
+	tagIDsInt := []int{5, 6, 7}
+	resultInt := RandomFromArray(tagIDsInt)
+	fmt.Println(resultInt)
 }

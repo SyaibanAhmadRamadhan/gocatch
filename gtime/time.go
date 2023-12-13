@@ -34,3 +34,37 @@ func TimeTrack(start time.Time) string {
 
 	return FormatDuration(elapsed)
 }
+
+// TimeUnit represents different units of time.
+type TimeUnit uint8
+
+const (
+	Nanoseconds TimeUnit = iota
+	Microseconds
+	Milliseconds
+)
+
+// NormalizeTimeUnit normalizes the time according to the specified TimeUnit.
+func NormalizeTimeUnit(inputTime time.Time, opt TimeUnit) time.Time {
+	nsec := 0
+	switch opt {
+	case Nanoseconds:
+		nsec = (inputTime.Nanosecond() / int(time.Nanosecond)) * int(time.Nanosecond)
+	case Milliseconds:
+		nsec = (inputTime.Nanosecond() / int(time.Millisecond)) * int(time.Millisecond)
+	case Microseconds:
+		nsec = (inputTime.Nanosecond() / int(time.Microsecond)) * int(time.Microsecond)
+	default:
+		nsec = inputTime.Nanosecond()
+	}
+	return time.Date(
+		inputTime.Year(),
+		inputTime.Month(),
+		inputTime.Day(),
+		inputTime.Hour(),
+		inputTime.Minute(),
+		inputTime.Second(),
+		nsec,
+		time.UTC,
+	)
+}

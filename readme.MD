@@ -31,6 +31,17 @@ This project utilises the following external Go libraries:
 
 Releases should follow the [Semantic Versioning](http://semver.org/) guidelines. The first couple of releases are `v1` and `v1.1`, with subsequent examples like `v1.2.1`.
 
+## docker command
+1. stop and rm container by prefix name
+    ```
+    docker ps -a --filter "name=prefixname" -q | xargs docker stop
+    docker ps -a --filter "name=prefixname" -q | xargs docker rm
+    ```
+2. rm network by prefix
+    ```
+    docker network rm $(docker network ls --filter "name=prefixname" -q)
+    ```
+   
 [//]: # (# Project Folders)
 
 [//]: # ()

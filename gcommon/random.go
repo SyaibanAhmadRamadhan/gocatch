@@ -40,3 +40,10 @@ func RandomNumericString(length int) string {
 	numString := strconv.Itoa(seededRandInt % maxValue)
 	return numString
 }
+
+// RandomFromArray get random one value from array or slice
+func RandomFromArray[T any](tagIDs []T) T {
+	randomIndex := rand.Intn(len(tagIDs))
+
+	return tagIDs[randomIndex]
+}

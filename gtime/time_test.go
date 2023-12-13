@@ -24,3 +24,56 @@ func TestFormatDuration(t *testing.T) {
 		}
 	}
 }
+
+func TestNormalizeTimeUnit(t *testing.T) {
+	testCases := []struct {
+		name          string
+		inputTime     time.Time
+		unit          TimeUnit
+		expectedNsec  int
+		expectedMonth time.Month
+	}{
+		{
+			name:          "Nanoseconds",
+			inputTime:     time.Date(2022, time.January, 1, 12, 0, 0, 0, time.UTC),
+			unit:          Nanoseconds,
+			expectedNsec:  0,
+			expectedMonth: time.January,
+		},
+		{
+			name:          "Milliseconds",
+			inputTime:     time.Date(2022, time.February, 1, 12, 0, 0, 500*int(time.Millisecond), time.UTC),
+			unit:          Milliseconds,
+			expectedNsec:  int(500 * time.Millisecond.Nanoseconds()),
+			expectedMonth: time.February,
+		},
+		{
+			name:          "Microseconds",
+			inputTime:     time.Date(2022, time.March, 1, 12, 0, 0, 500*int(time.Microsecond), time.UTC),
+			unit:          Microseconds,
+			expectedNsec:  500 * int(time.Microsecond),
+			expectedMonth: time.March,
+		},
+		{
+			name:          "Default",
+			inputTime:     time.Date(2022, time.April, 1, 12, 0, 0, 500*int(time.Nanosecond), time.UTC),
+			unit:          42, // Invalid unit, uses default
+			expectedNsec:  500 * int(time.Nanosecond),
+			expectedMonth: time.April,
+		},
+	}
+
+	for _, tc := range testCases {
+		t.Run(tc.name, func(t *testing.T) {
+			result := NormalizeTimeUnit(tc.inputTime, tc.unit)
+
+			if result.Nanosecond() != tc.expectedNsec {
+				t.Errorf("Expected Nanoseconds: %d, Got: %d", tc.expectedNsec, result.Nanosecond())
+			}
+
+			if result.Month() != tc.expectedMonth {
+				t.Errorf("Expected Month: %s, Got: %s", tc.expectedMonth, result.Month())
+			}
+		})
+	}
+}
