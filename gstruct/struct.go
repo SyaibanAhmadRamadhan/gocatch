@@ -38,6 +38,7 @@ func ExtractStructTagsAndFields(src any, prefix string, tag string) (s map[strin
 				field.Type.String() == "gsql.NullInt32" ||
 				field.Type.String() == "gsql.NullByte" ||
 				field.Type.String() == "gsql.NullTime" ||
+				field.Type.String() == "time.Time" ||
 				field.Type.String() == "gsql.NullInt16" {
 				if fieldTag != "" {
 					s[field.Name] = fieldTag + "|" + field.Type.String()
