@@ -43,7 +43,7 @@ func TestPostgresDockerTest(t *testing.T) {
 	ctx := context.Background()
 	pgxCommander := NewPgxCommander(pool)
 	sqlxComannder := gsql.NewSqlxCommander(db)
-	txPgx := gdb.NewTxPgx(pool)
+	txPgx := NewTxPgx(pool)
 	txSqlx := gdb.NewTxSqlx(db)
 
 	err := txPgx.DoTransaction(ctx, nil, func(c context.Context) error {

@@ -201,6 +201,23 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		fn(`	return` + "\n")
 		fn("}\n\n")
 
+		order := gstruct.ExtractStructTagsAndFields(param.Src, "", "order")
+		fn("// OrderFields is a function to get all field or column in the table " + t.Name() + ".\n")
+		fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") OrderFields() (str []string) {\n")
+		fn(`	str = []string{ ` + "\n")
+		for k, v := range order {
+			if strings.Split(v, "|")[0] == "true" {
+				for k1, v1 := range field {
+					if k1 == k {
+						fn("\t\t`" + strings.Split(v1, "|")[0] + "`" + ",\n")
+					}
+				}
+			}
+		}
+		fn(`	}` + "\n")
+		fn(`	return` + "\n")
+		fn("}\n\n")
+
 		fn("// GetValuesByColums is a function to get all value by column in the table " + t.Name() + ".\n")
 		fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") GetValuesByColums(columns ...string) []any {\n")
 		fn(`	var values []any` + "\n")

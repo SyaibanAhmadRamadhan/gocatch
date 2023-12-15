@@ -24,34 +24,14 @@ func NewUserWithOutPtr() User {
 	return User{}
 }
 
-// FieldDeletedBy is a field or column in the table User.
-func (u *User) FieldDeletedBy() string {
-	return "deleted_by"
+// FieldUsername is a field or column in the table User.
+func (u *User) FieldUsername() string {
+	return "username"
 }
 
-// SetDeletedBy is a setter for the field or column DeletedBy in the table User.
-func (u *User) SetDeletedBy(param string) {
-	u.DeletedBy = gsql.NewNullString(&param)
-}
-
-// FieldPhoneNumber is a field or column in the table User.
-func (u *User) FieldPhoneNumber() string {
-	return "phone_number"
-}
-
-// SetPhoneNumber is a setter for the field or column PhoneNumber in the table User.
-func (u *User) SetPhoneNumber(param string) {
-	u.PhoneNumber = param
-}
-
-// FieldUpdatedAt is a field or column in the table User.
-func (u *User) FieldUpdatedAt() string {
-	return "updated_at"
-}
-
-// SetUpdatedAt is a setter for the field or column UpdatedAt in the table User.
-func (u *User) SetUpdatedAt(param int64) {
-	u.UpdatedAt = gsql.NewNullInt64(&param)
+// SetUsername is a setter for the field or column Username in the table User.
+func (u *User) SetUsername(param string) {
+	u.Username = param
 }
 
 // FieldCreatedBy is a field or column in the table User.
@@ -64,24 +44,24 @@ func (u *User) SetCreatedBy(param string) {
 	u.CreatedBy = param
 }
 
-// FieldEmail is a field or column in the table User.
-func (u *User) FieldEmail() string {
-	return "email"
+// FieldDeletedAt is a field or column in the table User.
+func (u *User) FieldDeletedAt() string {
+	return "deleted_at"
 }
 
-// SetEmail is a setter for the field or column Email in the table User.
-func (u *User) SetEmail(param string) {
-	u.Email = param
+// SetDeletedAt is a setter for the field or column DeletedAt in the table User.
+func (u *User) SetDeletedAt(param int64) {
+	u.DeletedAt = gsql.NewNullInt64(&param)
 }
 
-// FieldPassword is a field or column in the table User.
-func (u *User) FieldPassword() string {
-	return "password"
+// FieldDeletedBy is a field or column in the table User.
+func (u *User) FieldDeletedBy() string {
+	return "deleted_by"
 }
 
-// SetPassword is a setter for the field or column Password in the table User.
-func (u *User) SetPassword(param string) {
-	u.Password = param
+// SetDeletedBy is a setter for the field or column DeletedBy in the table User.
+func (u *User) SetDeletedBy(param string) {
+	u.DeletedBy = gsql.NewNullString(&param)
 }
 
 // FieldCreatedAt is a field or column in the table User.
@@ -92,26 +72,6 @@ func (u *User) FieldCreatedAt() string {
 // SetCreatedAt is a setter for the field or column CreatedAt in the table User.
 func (u *User) SetCreatedAt(param string) {
 	u.CreatedAt = gsql.NewNullString(&param)
-}
-
-// FieldUpdatedBy is a field or column in the table User.
-func (u *User) FieldUpdatedBy() string {
-	return "updated_by"
-}
-
-// SetUpdatedBy is a setter for the field or column UpdatedBy in the table User.
-func (u *User) SetUpdatedBy(param string) {
-	u.UpdatedBy = gsql.NewNullString(&param)
-}
-
-// FieldDeletedAt is a field or column in the table User.
-func (u *User) FieldDeletedAt() string {
-	return "deleted_at"
-}
-
-// SetDeletedAt is a setter for the field or column DeletedAt in the table User.
-func (u *User) SetDeletedAt(param int64) {
-	u.DeletedAt = gsql.NewNullInt64(&param)
 }
 
 // FieldID is a field or column in the table User.
@@ -134,31 +94,81 @@ func (u *User) SetRoleID(param int) {
 	u.RoleID = param
 }
 
-// FieldUsername is a field or column in the table User.
-func (u *User) FieldUsername() string {
-	return "username"
+// FieldPhoneNumber is a field or column in the table User.
+func (u *User) FieldPhoneNumber() string {
+	return "phone_number"
 }
 
-// SetUsername is a setter for the field or column Username in the table User.
-func (u *User) SetUsername(param string) {
-	u.Username = param
+// SetPhoneNumber is a setter for the field or column PhoneNumber in the table User.
+func (u *User) SetPhoneNumber(param string) {
+	u.PhoneNumber = param
+}
+
+// FieldUpdatedAt is a field or column in the table User.
+func (u *User) FieldUpdatedAt() string {
+	return "updated_at"
+}
+
+// SetUpdatedAt is a setter for the field or column UpdatedAt in the table User.
+func (u *User) SetUpdatedAt(param int64) {
+	u.UpdatedAt = gsql.NewNullInt64(&param)
+}
+
+// FieldUpdatedBy is a field or column in the table User.
+func (u *User) FieldUpdatedBy() string {
+	return "updated_by"
+}
+
+// SetUpdatedBy is a setter for the field or column UpdatedBy in the table User.
+func (u *User) SetUpdatedBy(param string) {
+	u.UpdatedBy = gsql.NewNullString(&param)
+}
+
+// FieldEmail is a field or column in the table User.
+func (u *User) FieldEmail() string {
+	return "email"
+}
+
+// SetEmail is a setter for the field or column Email in the table User.
+func (u *User) SetEmail(param string) {
+	u.Email = param
+}
+
+// FieldPassword is a field or column in the table User.
+func (u *User) FieldPassword() string {
+	return "password"
+}
+
+// SetPassword is a setter for the field or column Password in the table User.
+func (u *User) SetPassword(param string) {
+	u.Password = param
 }
 
 // AllField is a function to get all field or column in the table User.
 func (u *User) AllField() (str []string) {
 	str = []string{ 
-		`email`,
-		`password`,
-		`created_at`,
-		`updated_by`,
+		`role_id`,
+		`username`,
+		`created_by`,
 		`deleted_at`,
+		`deleted_by`,
+		`created_at`,
+		`id`,
+		`password`,
+		`phone_number`,
+		`updated_at`,
+		`updated_by`,
+		`email`,
+	}
+	return
+}
+
+// OrderFields is a function to get all field or column in the table User.
+func (u *User) OrderFields() (str []string) {
+	str = []string{ 
 		`id`,
 		`role_id`,
 		`username`,
-		`deleted_by`,
-		`phone_number`,
-		`updated_at`,
-		`created_by`,
 	}
 	return
 }
@@ -168,30 +178,30 @@ func (u *User) GetValuesByColums(columns ...string) []any {
 	var values []any
 	for _, column := range columns {
 		switch column {
-		case u.FieldCreatedBy():
-			values = append(values, u.CreatedBy)
-		case u.FieldDeletedBy():
-			values = append(values, u.DeletedBy)
+		case u.FieldPassword():
+			values = append(values, u.Password)
 		case u.FieldPhoneNumber():
 			values = append(values, u.PhoneNumber)
 		case u.FieldUpdatedAt():
 			values = append(values, u.UpdatedAt)
-		case u.FieldUsername():
-			values = append(values, u.Username)
-		case u.FieldEmail():
-			values = append(values, u.Email)
-		case u.FieldPassword():
-			values = append(values, u.Password)
-		case u.FieldCreatedAt():
-			values = append(values, u.CreatedAt)
 		case u.FieldUpdatedBy():
 			values = append(values, u.UpdatedBy)
-		case u.FieldDeletedAt():
-			values = append(values, u.DeletedAt)
-		case u.FieldID():
-			values = append(values, u.ID)
+		case u.FieldEmail():
+			values = append(values, u.Email)
 		case u.FieldRoleID():
 			values = append(values, u.RoleID)
+		case u.FieldUsername():
+			values = append(values, u.Username)
+		case u.FieldCreatedBy():
+			values = append(values, u.CreatedBy)
+		case u.FieldDeletedAt():
+			values = append(values, u.DeletedAt)
+		case u.FieldDeletedBy():
+			values = append(values, u.DeletedBy)
+		case u.FieldCreatedAt():
+			values = append(values, u.CreatedAt)
+		case u.FieldID():
+			values = append(values, u.ID)
 		}
 	}
 	return values
@@ -201,30 +211,60 @@ func (u *User) GetValuesByColums(columns ...string) []any {
 func (u *User) ScanMap(data map[string]any) (err error) {
 	for key, value := range data {
 		switch key {
-		case u.FieldPhoneNumber():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field PhoneNumber")
-			}
-			u.SetPhoneNumber(val)
 		case u.FieldUpdatedAt():
 			val, ok := value.(int64)
 			if !ok {
 				return errors.New("invalid type int64. field UpdatedAt")
 			}
 			u.SetUpdatedAt(val)
+		case u.FieldUpdatedBy():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field UpdatedBy")
+			}
+			u.SetUpdatedBy(val)
+		case u.FieldEmail():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field Email")
+			}
+			u.SetEmail(val)
+		case u.FieldPassword():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field Password")
+			}
+			u.SetPassword(val)
+		case u.FieldPhoneNumber():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field PhoneNumber")
+			}
+			u.SetPhoneNumber(val)
 		case u.FieldCreatedBy():
 			val, ok := value.(string)
 			if !ok {
 				return errors.New("invalid type string. field CreatedBy")
 			}
 			u.SetCreatedBy(val)
+		case u.FieldDeletedAt():
+			val, ok := value.(int64)
+			if !ok {
+				return errors.New("invalid type int64. field DeletedAt")
+			}
+			u.SetDeletedAt(val)
 		case u.FieldDeletedBy():
 			val, ok := value.(string)
 			if !ok {
 				return errors.New("invalid type string. field DeletedBy")
 			}
 			u.SetDeletedBy(val)
+		case u.FieldCreatedAt():
+			val, ok := value.(string)
+			if !ok {
+				return errors.New("invalid type string. field CreatedAt")
+			}
+			u.SetCreatedAt(val)
 		case u.FieldID():
 			val, ok := value.(string)
 			if !ok {
@@ -243,36 +283,6 @@ func (u *User) ScanMap(data map[string]any) (err error) {
 				return errors.New("invalid type string. field Username")
 			}
 			u.SetUsername(val)
-		case u.FieldEmail():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field Email")
-			}
-			u.SetEmail(val)
-		case u.FieldPassword():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field Password")
-			}
-			u.SetPassword(val)
-		case u.FieldCreatedAt():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field CreatedAt")
-			}
-			u.SetCreatedAt(val)
-		case u.FieldUpdatedBy():
-			val, ok := value.(string)
-			if !ok {
-				return errors.New("invalid type string. field UpdatedBy")
-			}
-			u.SetUpdatedBy(val)
-		case u.FieldDeletedAt():
-			val, ok := value.(int64)
-			if !ok {
-				return errors.New("invalid type int64. field DeletedAt")
-			}
-			u.SetDeletedAt(val)
 		default:
 			return errors.New("invalid column")
 		}

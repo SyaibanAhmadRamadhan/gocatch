@@ -36,7 +36,7 @@ func TestMongoDockerTest(t *testing.T) {
 	}
 	collection := mongodbConn.Collection("exampleCollection")
 
-	tx := gdb.NewTxMongodb(mongoClient)
+	tx := NewTxMongodb(mongoClient)
 	err = tx.DoTransaction(context.Background(), &gdb.TxOption{
 		Type:   gdb.TxTypeMongoDB,
 		Option: &options.SessionOptions{},

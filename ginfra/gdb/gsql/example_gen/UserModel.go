@@ -14,10 +14,10 @@ type Audit struct {
 }
 
 type User struct {
-	ID          string `db:"id"`
-	RoleID      int    `db:"role_id"`
-	Username    string `db:"username"`
-	Email       string `db:"email"`
+	ID          string `db:"id"        order:"true"`
+	RoleID      int    `db:"role_id"   order:"true"`
+	Username    string `db:"username"  order:"true"`
+	Email       string `db:"email"     order:"false"`
 	Password    string `db:"password"`
 	PhoneNumber string `db:"phone_number"`
 	Audit       `db:"-"`

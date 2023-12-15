@@ -1,4 +1,4 @@
-package gdb
+package gmongodb
 
 import (
 	"context"
@@ -6,17 +6,19 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
 type txMongodb struct {
 	client *mongo.Client
 }
 
-func NewTxMongodb(client *mongo.Client) Tx {
+func NewTxMongodb(client *mongo.Client) gdb.Tx {
 	return &txMongodb{client: client}
 }
 
-func (m *txMongodb) DoTransaction(ctx context.Context, opt *TxOption, fn func(c context.Context) error) (err error) {
+func (m *txMongodb) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
 	opts, err := m.extractOpt(opt)
 	if err != nil {
 		return
@@ -59,7 +61,7 @@ func (m *txMongodb) DoTransaction(ctx context.Context, opt *TxOption, fn func(c 
 	return err
 }
 
-func (m *txMongodb) extractOpt(opt *TxOption) (opts *options.SessionOptions, err error) {
+func (m *txMongodb) extractOpt(opt *gdb.TxOption) (opts *options.SessionOptions, err error) {
 	if opt == nil {
 		return
 	}
@@ -68,14 +70,14 @@ func (m *txMongodb) extractOpt(opt *TxOption) (opts *options.SessionOptions, err
 		return
 	}
 
-	if opt.Type != TxTypeMongoDB && opt.Type != TxTypeNone {
-		err = fmt.Errorf("%w, your type is not pgx. but %s", ErrTypeTx, opt.Type.String())
+	if opt.Type != gdb.TxTypeMongoDB && opt.Type != gdb.TxTypeNone {
+		err = fmt.Errorf("%w, your type is not pgx. but %s", gdb.ErrTypeTx, opt.Type.String())
 		return
 	}
 
 	opts, ok := opt.Option.(*options.SessionOptions)
 	if !ok {
-		err = fmt.Errorf("%w, your type is not *options.SessionOptions", ErrTypeTx)
+		err = fmt.Errorf("%w, your type is not *options.SessionOptions", gdb.ErrTypeTx)
 		return
 	}
 

@@ -1,4 +1,4 @@
-package gdb
+package gpostgre
 
 import (
 	"context"
@@ -6,19 +6,21 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
 type txPgx struct {
 	pool *pgxpool.Pool
 }
 
-func NewTxPgx(pool *pgxpool.Pool) Tx {
+func NewTxPgx(pool *pgxpool.Pool) gdb.Tx {
 	return &txPgx{
 		pool: pool,
 	}
 }
 
-func (t *txPgx) DoTransaction(ctx context.Context, opt *TxOption, fn func(c context.Context) error) (err error) {
+func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
 	opts, err := t.extractOpt(opt)
 	if err != nil {
 		return err
@@ -51,14 +53,14 @@ func (t *txPgx) DoTransaction(ctx context.Context, opt *TxOption, fn func(c cont
 		}
 	}()
 
-	txKey := context.WithValue(ctx, TxKey{}, tx)
+	txKey := context.WithValue(ctx, gdb.TxKey{}, tx)
 
 	err = fn(txKey)
 
 	return err
 }
 
-func (t *txPgx) extractOpt(opt *TxOption) (opts pgx.TxOptions, err error) {
+func (t *txPgx) extractOpt(opt *gdb.TxOption) (opts pgx.TxOptions, err error) {
 	if opt == nil {
 		return
 	}
@@ -67,14 +69,14 @@ func (t *txPgx) extractOpt(opt *TxOption) (opts pgx.TxOptions, err error) {
 		return
 	}
 
-	if opt.Type != TxTypePgx && opt.Type != TxTypeNone {
-		err = fmt.Errorf("%w, your type is not *pgx.TxOptions. but %s", ErrTypeTx, opt.Type.String())
+	if opt.Type != gdb.TxTypePgx && opt.Type != gdb.TxTypeNone {
+		err = fmt.Errorf("%w, your type is not *pgx.TxOptions. but %s", gdb.ErrTypeTx, opt.Type.String())
 		return
 	}
 
 	opts, ok := opt.Option.(pgx.TxOptions)
 	if !ok {
-		err = fmt.Errorf("%w, your type is not pgx.TxOptions", ErrTypeTx)
+		err = fmt.Errorf("%w, your type is not pgx.TxOptions", gdb.ErrTypeTx)
 		return
 	}
 

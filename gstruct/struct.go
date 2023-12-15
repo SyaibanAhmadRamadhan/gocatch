@@ -45,7 +45,8 @@ func ExtractStructTagsAndFields(src any, prefix string, tag string) (s map[strin
 				}
 				continue
 			}
-			if field.Tag.Get(tag) != "-" && field.Tag.Get(tag) != "ignore" {
+			
+			if field.Tag.Get(tag) != "-" && field.Tag.Get(tag) != "ignore" && field.Tag.Get(tag) != "" {
 				panic("nested struct is not supported")
 			}
 			if fieldTag == "-" {

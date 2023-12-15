@@ -42,3 +42,28 @@ func AppendUniqueValWithErr[T comparable](dst []T, elem ...T) ([]T, error) {
 	dst = append(dst, newDst...)
 	return dst, nil
 }
+
+func FilterDifferentElem[T comparable](src []T, ref []T) []T {
+	var res []T
+	for _, v := range src {
+		if Contains(ref, v) {
+			res = append(res, v)
+		}
+	}
+
+	return res
+}
+
+func SlicesMatch[T comparable](src []T, ref []T) bool {
+	if len(src) != len(ref) {
+		return false
+	}
+
+	for i, v := range src {
+		if v != ref[i] {
+			return false
+		}
+	}
+
+	return true
+}
