@@ -101,6 +101,14 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 
 		fn(importSrc + "\n\n")
 
+		fn(`// ` + t.Name() + "TableName this table or collection name\n")
+		fn(`const ` + t.Name() + `TableName string = "` + param.SpecifiationTable.TableName + "\"\n\n")
+
+		if param.SpecifiationTable.SchemaName != "" {
+			fn("// " + t.Name() + "SchemaName is a variable schema name\n")
+			fn(`const ` + t.Name() + `SchemaName string = "` + param.SpecifiationTable.SchemaName + "\"\n\n")
+		}
+
 		fn("// New" + t.Name() + " is a struct with pointer that represents the table " + t.Name() + " in the database.\n")
 		fn(`func New` + t.Name() + `() *` + t.Name() + " {\n")
 		fn(`	return &` + t.Name() + "{}\n")
@@ -111,17 +119,17 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		fn(`	return ` + t.Name() + "{}\n")
 		fn("}\n\n")
 
-		fn("// TableName is a function to get table name\n")
-		fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") TableName() (table string) {\n")
-		fn(`	return "` + param.SpecifiationTable.TableName + "\"\n")
-		fn("}\n\n")
+		// fn("// TableName is a function to get table name\n")
+		// fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") TableName() (table string) {\n")
+		// fn(`	return "` + param.SpecifiationTable.TableName + "\"\n")
+		// fn("}\n\n")
 
-		if param.SpecifiationTable.SchemaName != "" {
-			fn("// SchemaName is a function to get schema name\n")
-			fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
-			fn(`	return "` + param.SpecifiationTable.SchemaName + "\"\n")
-			fn("}\n\n")
-		}
+		// if param.SpecifiationTable.SchemaName != "" {
+		// 	fn("// SchemaName is a function to get schema name\n")
+		// 	fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") SchemaName() (schema string) {\n")
+		// 	fn(`	return "` + param.SpecifiationTable.SchemaName + "\"\n")
+		// 	fn("}\n\n")
+		// }
 
 		gsqlNullString := "gsql.NullString"
 		gsqlNullBool := "gsql.NullBool"

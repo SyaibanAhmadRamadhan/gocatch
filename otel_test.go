@@ -130,3 +130,9 @@ func TestNewResource(t *testing.T) {
 	attr := res.Attributes()
 	fmt.Println(attr)
 }
+
+func TestName(t *testing.T) {
+	var ap []any
+	ap = append(ap, 0, "")
+	fmt.Println(len(ap))
+}
