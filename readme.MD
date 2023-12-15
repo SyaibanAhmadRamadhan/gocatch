@@ -29,7 +29,14 @@ This project utilises the following external Go libraries:
 11. [rueidis](https://github.com/redis/rueidis) - A Redis client library for Go that focuses on simplicity, correctness, and performance.
 ## Releases
 
-Releases should follow the [Semantic Versioning](http://semver.org/) guidelines. The first couple of releases are `v1` and `v1.1`, with subsequent examples like `v1.2.1`.
+Releases should follow the 
+```
+year=23
+month=12
+date=15
+v1.lastYearMonthDate.HourMinute
+``` 
+example. ```v1.231215.2307```
 
 ## docker command
 1. stop and rm container by prefix name
