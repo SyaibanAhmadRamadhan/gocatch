@@ -20,12 +20,6 @@ type sqlxCommander struct {
 	db *sqlx.DB
 }
 
-func NewSqlxCommander(db *sqlx.DB) Commander {
-	return &sqlxCommander{
-		db: db,
-	}
-}
-
 func (c *sqlxCommander) QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error) {
 	tx := c.extractTx(ctx)
 	if tx != nil {

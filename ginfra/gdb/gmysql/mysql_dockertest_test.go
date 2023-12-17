@@ -12,7 +12,6 @@ import (
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
-	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
@@ -34,7 +33,7 @@ func TestMysqlDockerTest(t *testing.T) {
 	})
 
 	sqlxCommander := gsql.NewSqlxCommander(db)
-	sqlxTx := gdb.NewTxSqlx(db)
+	sqlxTx := gsql.NewTxSqlx(db)
 
 	_ = sqlxTx.DoTransaction(context.Background(), nil, func(c context.Context) error {
 		_, err := sqlxCommander.ExecContext(c,

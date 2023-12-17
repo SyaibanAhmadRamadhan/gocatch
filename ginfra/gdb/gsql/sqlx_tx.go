@@ -1,4 +1,4 @@
-package gdb
+package gsql
 
 import (
 	"context"
@@ -6,19 +6,21 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
 type txSqlx struct {
 	db *sqlx.DB
 }
 
-func NewTxSqlx(db *sqlx.DB) Tx {
+func NewTxSqlx(db *sqlx.DB) gdb.Tx {
 	return &txSqlx{
 		db: db,
 	}
 }
 
-func (t *txSqlx) DoTransaction(ctx context.Context, opt *TxOption, fn func(c context.Context) error) (err error) {
+func (t *txSqlx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
 	opts, err := t.extractOpt(opt)
 	if err != nil {
 		return err
@@ -51,13 +53,13 @@ func (t *txSqlx) DoTransaction(ctx context.Context, opt *TxOption, fn func(c con
 		}
 	}()
 
-	txKey := context.WithValue(ctx, TxKey{}, tx)
+	txKey := context.WithValue(ctx, gdb.TxKey{}, tx)
 	err = fn(txKey)
 
 	return err
 }
 
-func (t *txSqlx) extractOpt(opt *TxOption) (opts *sql.TxOptions, err error) {
+func (t *txSqlx) extractOpt(opt *gdb.TxOption) (opts *sql.TxOptions, err error) {
 	if opt == nil {
 		return
 	}
@@ -66,14 +68,14 @@ func (t *txSqlx) extractOpt(opt *TxOption) (opts *sql.TxOptions, err error) {
 		return
 	}
 
-	if opt.Type != TxTypeSqlx && opt.Type != TxTypeNone {
-		err = fmt.Errorf("%w, your type is not *sql.TxOptions. but %s", ErrTypeTx, opt.Type.String())
+	if opt.Type != gdb.TxTypeSqlx && opt.Type != gdb.TxTypeNone {
+		err = fmt.Errorf("%w, your type is not *sql.TxOptions. but %s", gdb.ErrTypeTx, opt.Type.String())
 		return
 	}
 
 	opts, ok := opt.Option.(*sql.TxOptions)
 	if !ok {
-		err = fmt.Errorf("%w, your type is not *sql.TxOptions", ErrTypeTx)
+		err = fmt.Errorf("%w, your type is not *sql.TxOptions", gdb.ErrTypeTx)
 		return
 	}
 

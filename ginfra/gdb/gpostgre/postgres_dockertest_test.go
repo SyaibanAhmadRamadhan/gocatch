@@ -13,7 +13,6 @@ import (
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
-	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
@@ -44,7 +43,7 @@ func TestPostgresDockerTest(t *testing.T) {
 	pgxCommander := NewPgxCommander(pool)
 	sqlxComannder := gsql.NewSqlxCommander(db)
 	txPgx := NewTxPgx(pool)
-	txSqlx := gdb.NewTxSqlx(db)
+	txSqlx := gsql.NewTxSqlx(db)
 
 	err := txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
 		_, err := pgxCommander.Exec(c, createTable)

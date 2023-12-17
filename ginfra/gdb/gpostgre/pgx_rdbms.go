@@ -21,12 +21,6 @@ type pgxCommander struct {
 	pool *pgxpool.Pool
 }
 
-func NewPgxCommander(pgxPool *pgxpool.Pool) Commander {
-	return &pgxCommander{
-		pool: pgxPool,
-	}
-}
-
 func (r *pgxCommander) Exec(ctx context.Context, sql string, arguments ...interface{}) (pgconn.CommandTag, error) {
 	tx := r.extractTx(ctx)
 	if tx != nil {
@@ -69,65 +63,3 @@ func (r *pgxCommander) extractTx(ctx context.Context) pgx.Tx {
 
 	return nil
 }
-
-// type RDBMS interface {
-// 	BeginRun(ctx context.Context, fn func(tx Commander) error) error
-// 	BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(tx Commander) error) error
-// 	Commander
-// }
-
-// func (t *pgxCommander) BeginRun(ctx context.Context, fn func(tx Commander) error) (err error) {
-// 	tx, err := t.Commander.Begin(ctx)
-// 	if err != nil {
-// 		return fmt.Errorf("failed start tx begin | err: %v", err)
-// 	}
-//
-// 	defer func() {
-// 		if p := recover(); p != nil {
-// 			if err := tx.Rollback(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 			panic(p)
-// 		} else if err != nil {
-// 			if err := tx.Rollback(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 		} else {
-// 			if err = tx.Commit(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 		}
-// 	}()
-//
-// 	err = fn(tx)
-//
-// 	return err
-// }
-//
-// func (t *pgxCommander) BeginTxRun(ctx context.Context, opts pgx.TxOptions, fn func(tx Commander) error) (err error) {
-// 	tx, err := t.pool.BeginTx(ctx, opts)
-// 	if err != nil {
-// 		return fmt.Errorf("failed start tx begin | err: %v", err)
-// 	}
-//
-// 	defer func() {
-// 		if p := recover(); p != nil {
-// 			if err := tx.Rollback(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 			panic(p)
-// 		} else if err != nil {
-// 			if err := tx.Rollback(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 		} else {
-// 			if err = tx.Commit(ctx); err != nil {
-// 				// TODO log error
-// 			}
-// 		}
-// 	}()
-//
-// 	err = fn(tx)
-//
-// 	return err
-// }

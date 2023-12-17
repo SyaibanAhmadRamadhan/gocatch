@@ -76,8 +76,8 @@ const (
 type PrefixNamedArgPG string
 
 const (
-	Pgx  PrefixNamedArgPG = "@"
-	Sqlx PrefixNamedArgPG = ":"
+	PgxNamedArg  PrefixNamedArgPG = "@"
+	SqlxNamedArg PrefixNamedArgPG = ":"
 )
 
 // LockingOperator represents a type for database locking operations.
