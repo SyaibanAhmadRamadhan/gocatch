@@ -40,13 +40,13 @@ func TestPostgresDockerTest(t *testing.T) {
 			(id serial PRIMARY KEY, username VARCHAR ( 50 ) NOT NULL, password VARCHAR ( 50 ) NOT NULL, 
     		email VARCHAR ( 255 ) NOT NULL, created_on TIMESTAMP NOT NULL, last_login TIMESTAMP);`
 	ctx := context.Background()
-	pgxCommander := NewPgxCommander(pool)
-	sqlxComannder := gsql.NewSqlxCommander(db)
+	pgxCommander := NewPgxPostgres(pool)
+	sqlxComannder := gsql.NewSqlx(db)
 	txPgx := NewTxPgx(pool)
 	txSqlx := gsql.NewTxSqlx(db)
 
 	err := txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
-		_, err := pgxCommander.Exec(c, createTable)
+		_, err := pgxCommander.Commander.Exec(c, createTable)
 		return err
 	})
 	gcommon.PanicIfError(err)
@@ -57,7 +57,7 @@ func TestPostgresDockerTest(t *testing.T) {
 		wg.Add(1)
 		go func() {
 			err = txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
-				_, err := pgxCommander.Exec(c, `INSERT INTO users (username, password, email, created_on, last_login) 
+				_, err := pgxCommander.Commander.Exec(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
 				return err
 			})
@@ -66,7 +66,7 @@ func TestPostgresDockerTest(t *testing.T) {
 			}
 
 			err = txSqlx.DoTransaction(ctx, nil, func(c context.Context) error {
-				_, err := sqlxComannder.ExecContext(c, `INSERT INTO users (username, password, email, created_on, last_login) 
+				_, err := sqlxComannder.Commander.ExecContext(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
 				return err
 			})
@@ -80,12 +80,12 @@ func TestPostgresDockerTest(t *testing.T) {
 
 	wg.Wait()
 
-	row := pgxCommander.QueryRow(context.Background(), "SELECT COUNT(*) FROM users;")
+	row := pgxCommander.Commander.QueryRow(context.Background(), "SELECT COUNT(*) FROM users;")
 	var count int
 	err = row.Scan(&count)
 	fmt.Println(count)
 
-	rowsqlx, err := sqlxComannder.QueryxContext(context.Background(), "SELECT COUNT(*) FROM users;")
+	rowsqlx, err := sqlxComannder.Commander.QueryxContext(context.Background(), "SELECT COUNT(*) FROM users;")
 	var countSqlx int
 	for rowsqlx.Next() {
 		err = rowsqlx.Scan(&countSqlx)

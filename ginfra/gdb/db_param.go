@@ -1,7 +1,7 @@
 package gdb
 
 import (
-	"github.com/SyaibanAhmadRamadhan/gocatch/garray"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gtypedata/garray"
 )
 
 type PaginationParam struct {

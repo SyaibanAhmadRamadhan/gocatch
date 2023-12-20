@@ -1,6 +1,7 @@
 package gmap
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -50,5 +51,11 @@ func (s StrAny) Merge(maps ...map[string]any) {
 				s[k] = v
 			}
 		}
+	}
+}
+
+func Println[V any, T map[string]V](data T) {
+	for key, value := range data {
+		fmt.Printf("%-10s: %s\n", key, value)
 	}
 }

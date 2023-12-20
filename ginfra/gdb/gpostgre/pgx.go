@@ -23,12 +23,11 @@ func (p *PostgresPgx) Close() {
 	}
 }
 
-func NewPgxPostgres(connString string) *PostgresPgx {
-	pgxPool := OpenPgxPool(connString)
+func NewPgxPostgres(pool *pgxpool.Pool) *PostgresPgx {
 	return &PostgresPgx{
-		Commander: &pgxCommander{pool: pgxPool},
+		Commander: &pgxCommander{pool: pool},
 		Builder:   squirrel.StatementBuilder.PlaceholderFormat(squirrel.Dollar),
-		Pool:      pgxPool,
+		Pool:      pool,
 	}
 }
 

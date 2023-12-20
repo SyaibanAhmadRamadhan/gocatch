@@ -10,8 +10,8 @@ import (
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/glog"
-	"github.com/SyaibanAhmadRamadhan/gocatch/gstr"
-	"github.com/SyaibanAhmadRamadhan/gocatch/gstruct"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gtypedata/gstr"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gtypedata/gstruct"
 )
 
 // SpecifiationTable is a struct that contains the specification of the table

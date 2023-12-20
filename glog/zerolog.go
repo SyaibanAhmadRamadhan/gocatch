@@ -12,7 +12,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/pkgerrors"
 
-	"github.com/SyaibanAhmadRamadhan/gocatch/gtime"
+	"github.com/SyaibanAhmadRamadhan/gocatch/gtypedata/gtime"
 )
 
 var once sync.Once
