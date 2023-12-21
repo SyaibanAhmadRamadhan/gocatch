@@ -18,7 +18,7 @@ func NewTxMongodb(client *mongo.Client) gdb.Tx {
 	return &txMongodb{client: client}
 }
 
-func (m *txMongodb) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
+func (m *txMongodb) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) (commit bool, err error)) (err error) {
 	opts, err := m.extractOpt(opt)
 	if err != nil {
 		return
@@ -38,24 +38,30 @@ func (m *txMongodb) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn fun
 			return err
 		}
 
+		var commit bool
 		defer func() {
 			if p := recover(); p != nil {
-				if err = session.AbortTransaction(sc); err != nil {
+				if errRollback := session.AbortTransaction(sc); errRollback != nil {
 					return
 				}
 				panic(p)
+			} else if commit {
+				if errCommit := session.CommitTransaction(sc); errCommit != nil {
+					return
+				}
 			} else if err != nil {
-				if err = session.AbortTransaction(sc); err != nil {
+				if errRollback := session.AbortTransaction(sc); errRollback != nil {
 					return
 				}
 			} else {
-				if err = session.CommitTransaction(sc); err != nil {
+				if errCommit := session.CommitTransaction(sc); errCommit != nil {
 					return
 				}
 			}
 		}()
 
-		return fn(sc)
+		commit, err = fn(sc)
+		return err
 	})
 
 	return err

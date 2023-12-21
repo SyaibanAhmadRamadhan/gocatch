@@ -2,6 +2,7 @@ package gmongodb
 
 import (
 	"context"
+	"errors"
 	"testing"
 	"time"
 
@@ -40,7 +41,7 @@ func TestMongoDockerTest(t *testing.T) {
 	err = tx.DoTransaction(context.Background(), &gdb.TxOption{
 		Type:   gdb.TxTypeMongoDB,
 		Option: &options.SessionOptions{},
-	}, func(c context.Context) error {
+	}, func(c context.Context) (bool, error) {
 		document := bson.M{"name": "example", "value": "entry"}
 		insertResult, err := collection.InsertOne(c, document)
 		if err != nil {
@@ -61,7 +62,7 @@ func TestMongoDockerTest(t *testing.T) {
 			t.Errorf("Document does not match expected values: %v", result)
 		}
 
-		return nil
+		return false, errors.New("asd")
 	})
 	gcommon.PanicIfError(err)
 

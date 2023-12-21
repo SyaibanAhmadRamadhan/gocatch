@@ -20,7 +20,7 @@ func NewTxSqlx(db *sqlx.DB) gdb.Tx {
 	}
 }
 
-func (t *txSqlx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
+func (t *txSqlx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) (commit bool, err error)) (err error) {
 	opts, err := t.extractOpt(opt)
 	if err != nil {
 		return err
@@ -36,25 +36,32 @@ func (t *txSqlx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c
 		return err
 	}
 
+	var commit bool
+
 	defer func() {
 		if p := recover(); p != nil {
-			if err = tx.Rollback(); err != nil {
+			if errRollback := tx.Rollback(); errRollback != nil {
 				return
 			}
 			panic(p)
+		} else if commit {
+			if errCommit := tx.Commit(); errCommit != nil {
+				return
+			}
 		} else if err != nil {
-			if err = tx.Rollback(); err != nil {
+			if errRollback := tx.Rollback(); errRollback != nil {
 				return
 			}
 		} else {
-			if err = tx.Commit(); err != nil {
+			if errCommit := tx.Commit(); errCommit != nil {
 				return
 			}
 		}
 	}()
 
 	txKey := context.WithValue(ctx, gdb.TxKey{}, tx)
-	err = fn(txKey)
+
+	commit, err = fn(txKey)
 
 	return err
 }

@@ -41,5 +41,5 @@ type TxKey struct{}
 //go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 -generate
 //counterfeiter:generate . Tx
 type Tx interface {
-	DoTransaction(ctx context.Context, opt *TxOption, fn func(c context.Context) error) (err error)
+	DoTransaction(ctx context.Context, opt *TxOption, fn func(c context.Context) (commit bool, err error)) (err error)
 }

@@ -20,7 +20,7 @@ func NewTxPgx(pool *pgxpool.Pool) gdb.Tx {
 	}
 }
 
-func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) error) (err error) {
+func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c context.Context) (commit bool, err error)) (err error) {
 	opts, err := t.extractOpt(opt)
 	if err != nil {
 		return err
@@ -36,12 +36,17 @@ func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c 
 		return err
 	}
 
+	var commit bool
 	defer func() {
 		if p := recover(); p != nil {
 			if errRollback := tx.Rollback(ctx); errRollback != nil {
 				return
 			}
 			panic(p)
+		} else if commit {
+			if errCommit := tx.Commit(ctx); errCommit != nil {
+				return
+			}
 		} else if err != nil {
 			if errRollback := tx.Rollback(ctx); errRollback != nil {
 				return
@@ -55,7 +60,7 @@ func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c 
 
 	txKey := context.WithValue(ctx, gdb.TxKey{}, tx)
 
-	err = fn(txKey)
+	commit, err = fn(txKey)
 
 	return err
 }

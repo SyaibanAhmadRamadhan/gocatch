@@ -50,9 +50,9 @@ func TestPostgresDockerTest(t *testing.T) {
 	err := txPgx.DoTransaction(ctx, &gdb.TxOption{
 		Type:   gdb.TxTypeMongoDB,
 		Option: nil,
-	}, func(c context.Context) error {
+	}, func(c context.Context) (bool, error) {
 		_, err := pgxCommander.Commander.Exec(c, createTable)
-		return err
+		return true, err
 	})
 	gcommon.PanicIfError(err)
 
@@ -61,20 +61,20 @@ func TestPostgresDockerTest(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
 		// go func() {
-		err = txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
+		err = txPgx.DoTransaction(ctx, nil, func(c context.Context) (bool, error) {
 			_, _ = pgxCommander.Commander.Exec(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
 
-			return errors.New("asd")
+			return false, errors.New("asd")
 		})
 		if err != nil {
-			fmt.Println(err)
+			// fmt.Println(err)
 		}
 
-		err = txSqlx.DoTransaction(ctx, nil, func(c context.Context) error {
+		err = txSqlx.DoTransaction(ctx, nil, func(c context.Context) (bool, error) {
 			_, err := sqlxComannder.Commander.ExecContext(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
-			return err
+			return false, err
 		})
 		if err != nil {
 			fmt.Println(err)
