@@ -15,6 +15,7 @@ type Commander interface {
 	Query(ctx context.Context, sql string, args ...interface{}) (pgx.Rows, error)
 	QueryRow(ctx context.Context, sql string, args ...interface{}) pgx.Row
 	Begin(ctx context.Context) (pgx.Tx, error)
+	SendBatch(ctx context.Context, b *pgx.Batch) pgx.BatchResults
 }
 
 type pgxCommander struct {
@@ -26,7 +27,6 @@ func (r *pgxCommander) Exec(ctx context.Context, sql string, arguments ...interf
 	if tx != nil {
 		return tx.Exec(ctx, sql, arguments...)
 	}
-
 	return r.pool.Exec(ctx, sql, arguments...)
 }
 
@@ -52,6 +52,14 @@ func (r *pgxCommander) Begin(ctx context.Context) (pgx.Tx, error) {
 		return tx.Begin(ctx)
 	}
 	return r.Begin(ctx)
+}
+
+func (r *pgxCommander) SendBatch(ctx context.Context, b *pgx.Batch) pgx.BatchResults {
+	tx := r.extractTx(ctx)
+	if tx != nil {
+		return tx.SendBatch(ctx, b)
+	}
+	return r.pool.SendBatch(ctx, b)
 }
 
 func (r *pgxCommander) extractTx(ctx context.Context) pgx.Tx {
