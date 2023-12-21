@@ -9,12 +9,12 @@ import (
 )
 
 type FakeTx struct {
-	DoTransactionStub        func(context.Context, *gdb.TxOption, func(c context.Context) error) error
+	DoTransactionStub        func(context.Context, *gdb.TxOption, func(c context.Context) (commit bool, err error)) error
 	doTransactionMutex       sync.RWMutex
 	doTransactionArgsForCall []struct {
 		arg1 context.Context
 		arg2 *gdb.TxOption
-		arg3 func(c context.Context) error
+		arg3 func(c context.Context) (commit bool, err error)
 	}
 	doTransactionReturns struct {
 		result1 error
@@ -26,13 +26,13 @@ type FakeTx struct {
 	invocationsMutex sync.RWMutex
 }
 
-func (fake *FakeTx) DoTransaction(arg1 context.Context, arg2 *gdb.TxOption, arg3 func(c context.Context) error) error {
+func (fake *FakeTx) DoTransaction(arg1 context.Context, arg2 *gdb.TxOption, arg3 func(c context.Context) (commit bool, err error)) error {
 	fake.doTransactionMutex.Lock()
 	ret, specificReturn := fake.doTransactionReturnsOnCall[len(fake.doTransactionArgsForCall)]
 	fake.doTransactionArgsForCall = append(fake.doTransactionArgsForCall, struct {
 		arg1 context.Context
 		arg2 *gdb.TxOption
-		arg3 func(c context.Context) error
+		arg3 func(c context.Context) (commit bool, err error)
 	}{arg1, arg2, arg3})
 	stub := fake.DoTransactionStub
 	fakeReturns := fake.doTransactionReturns
@@ -53,13 +53,13 @@ func (fake *FakeTx) DoTransactionCallCount() int {
 	return len(fake.doTransactionArgsForCall)
 }
 
-func (fake *FakeTx) DoTransactionCalls(stub func(context.Context, *gdb.TxOption, func(c context.Context) error) error) {
+func (fake *FakeTx) DoTransactionCalls(stub func(context.Context, *gdb.TxOption, func(c context.Context) (commit bool, err error)) error) {
 	fake.doTransactionMutex.Lock()
 	defer fake.doTransactionMutex.Unlock()
 	fake.DoTransactionStub = stub
 }
 
-func (fake *FakeTx) DoTransactionArgsForCall(i int) (context.Context, *gdb.TxOption, func(c context.Context) error) {
+func (fake *FakeTx) DoTransactionArgsForCall(i int) (context.Context, *gdb.TxOption, func(c context.Context) (commit bool, err error)) {
 	fake.doTransactionMutex.RLock()
 	defer fake.doTransactionMutex.RUnlock()
 	argsForCall := fake.doTransactionArgsForCall[i]
