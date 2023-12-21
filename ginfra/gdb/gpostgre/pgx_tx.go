@@ -38,16 +38,16 @@ func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c 
 
 	defer func() {
 		if p := recover(); p != nil {
-			if err = tx.Rollback(ctx); err != nil {
+			if errRollback := tx.Rollback(ctx); errRollback != nil {
 				return
 			}
 			panic(p)
 		} else if err != nil {
-			if err = tx.Rollback(ctx); err != nil {
+			if errRollback := tx.Rollback(ctx); errRollback != nil {
 				return
 			}
 		} else {
-			if err = tx.Commit(ctx); err != nil {
+			if errCommit := tx.Commit(ctx); errCommit != nil {
 				return
 			}
 		}

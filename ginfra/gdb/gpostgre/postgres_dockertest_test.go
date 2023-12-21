@@ -2,6 +2,7 @@ package gpostgre
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"testing"
@@ -59,27 +60,28 @@ func TestPostgresDockerTest(t *testing.T) {
 
 	for i := 0; i < 100; i++ {
 		wg.Add(1)
-		go func() {
-			err = txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
-				_, err := pgxCommander.Commander.Exec(c, `INSERT INTO users (username, password, email, created_on, last_login) 
+		// go func() {
+		err = txPgx.DoTransaction(ctx, nil, func(c context.Context) error {
+			_, _ = pgxCommander.Commander.Exec(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
-				return err
-			})
-			if err != nil {
-				fmt.Println(err)
-			}
 
-			err = txSqlx.DoTransaction(ctx, nil, func(c context.Context) error {
-				_, err := sqlxComannder.Commander.ExecContext(c, `INSERT INTO users (username, password, email, created_on, last_login) 
+			return errors.New("asd")
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		err = txSqlx.DoTransaction(ctx, nil, func(c context.Context) error {
+			_, err := sqlxComannder.Commander.ExecContext(c, `INSERT INTO users (username, password, email, created_on, last_login) 
 																		VALUES ('test', 'test', '', NOW(), NOW());`)
-				return err
-			})
-			if err != nil {
-				fmt.Println(err)
-			}
+			return err
+		})
+		if err != nil {
+			fmt.Println(err)
+		}
 
-			wg.Done()
-		}()
+		wg.Done()
+		// }()
 	}
 
 	wg.Wait()
