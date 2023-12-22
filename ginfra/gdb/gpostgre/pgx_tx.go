@@ -2,6 +2,7 @@ package gpostgre
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
@@ -40,20 +41,20 @@ func (t *txPgx) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn func(c 
 	defer func() {
 		if p := recover(); p != nil {
 			if errRollback := tx.Rollback(ctx); errRollback != nil {
-				return
+				err = errors.Join(gdb.ErrRollback, errRollback)
 			}
 			panic(p)
 		} else if commit {
 			if errCommit := tx.Commit(ctx); errCommit != nil {
-				return
+				err = errors.Join(gdb.ErrCommit, errCommit)
 			}
 		} else if err != nil {
 			if errRollback := tx.Rollback(ctx); errRollback != nil {
-				return
+				err = errors.Join(gdb.ErrRollback, errRollback)
 			}
 		} else {
 			if errCommit := tx.Commit(ctx); errCommit != nil {
-				return
+				err = errors.Join(gdb.ErrCommit, errCommit)
 			}
 		}
 	}()

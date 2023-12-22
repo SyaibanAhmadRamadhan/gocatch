@@ -2,6 +2,7 @@ package gmongodb
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -42,20 +43,20 @@ func (m *txMongodb) DoTransaction(ctx context.Context, opt *gdb.TxOption, fn fun
 		defer func() {
 			if p := recover(); p != nil {
 				if errRollback := session.AbortTransaction(sc); errRollback != nil {
-					return
+					err = errors.Join(gdb.ErrRollback, errRollback)
 				}
 				panic(p)
 			} else if commit {
 				if errCommit := session.CommitTransaction(sc); errCommit != nil {
-					return
+					err = errors.Join(gdb.ErrCommit, errCommit)
 				}
 			} else if err != nil {
 				if errRollback := session.AbortTransaction(sc); errRollback != nil {
-					return
+					err = errors.Join(gdb.ErrRollback, errRollback)
 				}
 			} else {
 				if errCommit := session.CommitTransaction(sc); errCommit != nil {
-					return
+					err = errors.Join(gdb.ErrCommit, errCommit)
 				}
 			}
 		}()

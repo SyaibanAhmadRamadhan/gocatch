@@ -10,10 +10,13 @@ import (
 )
 
 type Commander interface {
+	QueryRowxContext(ctx context.Context, query string, args ...interface{}) *sqlx.Row
 	QueryxContext(ctx context.Context, query string, args ...interface{}) (*sqlx.Rows, error)
 	ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error)
 	NamedQueryContext(ctx context.Context, query string, arg interface{}) (*sqlx.Rows, error)
 	NamedExecContext(ctx context.Context, query string, arg interface{}) (sql.Result, error)
+	PreparexContext(ctx context.Context, query string) (*sqlx.Stmt, error)
+	PrepareNamedContext(ctx context.Context, query string) (*sqlx.NamedStmt, error)
 }
 
 type sqlxCommander struct {
@@ -27,6 +30,15 @@ func (c *sqlxCommander) QueryxContext(ctx context.Context, query string, args ..
 	}
 
 	return c.db.QueryxContext(ctx, query, args...)
+}
+
+func (c *sqlxCommander) QueryRowxContext(ctx context.Context, query string, args ...interface{}) *sqlx.Row {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.QueryRowxContext(ctx, query, args...)
+	}
+
+	return c.db.QueryRowxContext(ctx, query, args...)
 }
 
 func (c *sqlxCommander) ExecContext(ctx context.Context, query string, args ...interface{}) (sql.Result, error) {
@@ -54,6 +66,24 @@ func (c *sqlxCommander) NamedExecContext(ctx context.Context, query string, arg 
 	}
 
 	return c.db.NamedExecContext(ctx, query, arg)
+}
+
+func (c *sqlxCommander) PreparexContext(ctx context.Context, query string) (*sqlx.Stmt, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.PreparexContext(ctx, query)
+	}
+
+	return c.db.PreparexContext(ctx, query)
+}
+
+func (c *sqlxCommander) PrepareNamedContext(ctx context.Context, query string) (*sqlx.NamedStmt, error) {
+	tx := c.extractTx(ctx)
+	if tx != nil {
+		return tx.PrepareNamedContext(ctx, query)
+	}
+
+	return c.db.PrepareNamedContext(ctx, query)
 }
 
 func (c *sqlxCommander) extractTx(ctx context.Context) (tx *sqlx.Tx) {
