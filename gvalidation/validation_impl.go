@@ -15,22 +15,35 @@ import (
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
-func (v *Validation) StructM(s interface{}) (res map[string]string) {
+type ErrValidate struct {
+	Err map[string]string
+}
+
+func (e *ErrValidate) Error() string {
+	str := ""
+	for _, v := range e.Err {
+		str += v + ". "
+	}
+	return str
+}
+
+func (v *Validation) StructM(s interface{}) error {
 	err := v.Validate.Struct(s)
 	if err != nil {
 		var validationErrors validator.ValidationErrors
 		ok := errors.As(err, &validationErrors)
 		if !ok {
-			return
+			return err
 		}
 
-		res = make(map[string]string)
+		res := make(map[string]string)
 		for _, validationError := range validationErrors {
 			res[v.GetField(validationError.Namespace())] = validationError.Translate(v.Transalation)
 		}
+		return &ErrValidate{Err: res}
 	}
 
-	return
+	return nil
 }
 
 func (v *Validation) GetField(namespace string) string {

@@ -1,9 +1,8 @@
 package gvalidation
 
 import (
+	"fmt"
 	"testing"
-
-	"github.com/SyaibanAhmadRamadhan/gocatch/gtypedata/gmap"
 )
 
 type Address struct {
@@ -32,8 +31,8 @@ func TestValidation(t *testing.T) {
 		},
 	}
 
-	data := validate.StructM(req)
-	gmap.Println(data)
+	err := validate.StructM(req)
+	fmt.Println(err)
 }
 
 func TestValidation2(t *testing.T) {
@@ -45,6 +44,6 @@ func TestValidation2(t *testing.T) {
 		},
 	}
 
-	data := validate.StructM(req)
-	gmap.Println(data)
+	err := validate.StructM(req)
+	fmt.Println(err)
 }
