@@ -131,14 +131,14 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		// 	fn("}\n\n")
 		// }
 
-		gsqlNullString := "gsql.NullString"
-		gsqlNullBool := "gsql.NullBool"
-		gsqlNullFloat64 := "gsql.NullFloat64"
-		gsqlNullInt64 := "gsql.NullInt64"
-		gsqlNullInt32 := "gsql.NullInt32"
-		gsqlNullByte := "gsql.NullByte"
-		gsqlNullTime := "gsql.NullTime"
-		gsqlNullInt16 := "gsql.NullInt16"
+		gdbSqlNullString := "gdb.SqlNullString"
+		gdbSqlNullBool := "gdb.SqlNullBool"
+		gdbSqlNullFloat64 := "gdb.SqlNullFloat64"
+		gdbSqlNullInt64 := "gdb.SqlNullInt64"
+		gdbSqlNullInt32 := "gdb.SqlNullInt32"
+		gdbSqlNullByte := "gdb.SqlNullByte"
+		gdbSqlNullTime := "gdb.SqlNullTime"
+		gdbSqlNullInt16 := "gdb.SqlNullInt16"
 
 		if param.Tag == "" {
 			param.Tag = "db"
@@ -156,34 +156,34 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 			// SetField
 			fn("// Set" + k + " is a setter for the field or column " + k + " in the table " + t.Name() + ".\n")
 			switch typeStruct {
-			case gsqlNullString:
+			case gdbSqlNullString:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) {\n")
-			case gsqlNullBool:
+			case gdbSqlNullBool:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) {\n")
-			case gsqlNullFloat64:
+			case gdbSqlNullFloat64:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) {\n")
-			case gsqlNullInt64:
+			case gdbSqlNullInt64:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) {\n")
-			case gsqlNullInt32:
+			case gdbSqlNullInt32:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) {\n")
-			case gsqlNullByte:
+			case gdbSqlNullByte:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) {\n")
-			case gsqlNullTime:
+			case gdbSqlNullTime:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) {\n")
-			case gsqlNullInt16:
+			case gdbSqlNullInt16:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) {\n")
 			default:
 				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") {\n")
 			}
 
-			if typeStruct == gsqlNullString ||
-				typeStruct == gsqlNullBool ||
-				typeStruct == gsqlNullFloat64 ||
-				typeStruct == gsqlNullInt64 ||
-				typeStruct == gsqlNullInt32 ||
-				typeStruct == gsqlNullByte ||
-				typeStruct == gsqlNullTime ||
-				typeStruct == gsqlNullInt16 {
+			if typeStruct == gdbSqlNullString ||
+				typeStruct == gdbSqlNullBool ||
+				typeStruct == gdbSqlNullFloat64 ||
+				typeStruct == gdbSqlNullInt64 ||
+				typeStruct == gdbSqlNullInt32 ||
+				typeStruct == gdbSqlNullByte ||
+				typeStruct == gdbSqlNullTime ||
+				typeStruct == gdbSqlNullInt16 {
 				fn(`	` + gstr.LowercaseFirstChar(t.Name()) + "." + k + " = " + strings.ReplaceAll(typeStruct, ".", ".New") + "(&param)" + "\n")
 			} else {
 				fn(`	` + gstr.LowercaseFirstChar(t.Name()) + "." + k + " = param" + "\n")
@@ -240,35 +240,35 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 			typeStruct := strings.Split(v, "|")[1]
 			fn(`		case ` + gstr.LowercaseFirstChar(t.Name()) + `.Field` + k + `():` + "\n")
 			switch typeStruct {
-			case gsqlNullString:
+			case gdbSqlNullString:
 				fn(`			val, ok := value.(` + "string)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type string. field ` + k + `")` + "\n")
-			case gsqlNullBool:
+			case gdbSqlNullBool:
 				fn(`			val, ok := value.(` + "bool)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type bool. field ` + k + `")` + "\n")
-			case gsqlNullFloat64:
+			case gdbSqlNullFloat64:
 				fn(`			val, ok := value.(` + "float64)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type float64. field ` + k + `")` + "\n")
-			case gsqlNullInt64:
+			case gdbSqlNullInt64:
 				fn(`			val, ok := value.(` + "int64)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int64. field ` + k + `")` + "\n")
-			case gsqlNullInt32:
+			case gdbSqlNullInt32:
 				fn(`			val, ok := value.(` + "int32)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int32. field ` + k + `")` + "\n")
-			case gsqlNullByte:
+			case gdbSqlNullByte:
 				fn(`			val, ok := value.(` + "byte)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type byte. field ` + k + `")` + "\n")
-			case gsqlNullTime:
+			case gdbSqlNullTime:
 				fn(`			val, ok := value.(` + "time.Time)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type time.Time. field ` + k + `")` + "\n")
-			case gsqlNullInt16:
+			case gdbSqlNullInt16:
 				fn(`			val, ok := value.(` + "int16)\n")
 				fn(`			` + "if !ok {\n")
 				fn(`				` + `return errors.New("invalid type int16. field ` + k + `")` + "\n")
@@ -352,7 +352,7 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 		// fn("}\n\n")
 		//
 		// fn("// FNamedArgsSet is a function to set FNamedArgs.\n")
-		// fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") FNamedArgsSet(param ...gsql.Filter) {\n")
+		// fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") FNamedArgsSet(param ...gdb.Filter) {\n")
 		// fn(`	if len(` + gstr.LowercaseFirstChar(t.Name()) + ".FNamedArgs) < 1 {\n")
 		// fn(`		if len(param) > 0` + " {\n")
 		// fn(`			param[0].Logical = ""` + "\n")
@@ -600,7 +600,7 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 // fn("}\n\n")
 
 // fn("// FieldArgForUpdate is function get string to SET update\n")
-// fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix gsql.PrefixNamedArgPG) string {\n")
+// fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") FieldArgForUpdate(prefix gdb.PrefixNamedArgPG) string {\n")
 // fn(`	str := ""` + "\n")
 // fn(`	columns := ` + gstr.LowercaseFirstChar(t.Name()) + ".FieldAndValue()\n")
 // fn(`	i := 1` + "\n")

@@ -1,16 +1,16 @@
 package example_gen
 
 import (
-	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
 type Audit struct {
-	CreatedAt gsql.NullString `db:"created_at"`
-	UpdatedAt gsql.NullInt64  `db:"updated_at"`
-	CreatedBy string          `db:"created_by"`
-	UpdatedBy gsql.NullString `db:"updated_by"`
-	DeletedAt gsql.NullInt64  `db:"deleted_at"`
-	DeletedBy gsql.NullString `db:"deleted_by"`
+	CreatedAt gdb.SqlNullString `db:"created_at"`
+	UpdatedAt gdb.SqlNullInt64  `db:"updated_at"`
+	CreatedBy string            `db:"created_by"`
+	UpdatedBy gdb.SqlNullString `db:"updated_by"`
+	DeletedAt gdb.SqlNullInt64  `db:"deleted_at"`
+	DeletedBy gdb.SqlNullString `db:"deleted_by"`
 }
 
 type User struct {

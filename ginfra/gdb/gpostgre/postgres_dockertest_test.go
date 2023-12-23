@@ -15,7 +15,6 @@ import (
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
-	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb/gsql"
 )
 
 func TestPostgresDockerTest(t *testing.T) {
@@ -43,9 +42,9 @@ func TestPostgresDockerTest(t *testing.T) {
     		email VARCHAR ( 255 ) NOT NULL, created_on TIMESTAMP NOT NULL, last_login TIMESTAMP);`
 	ctx := context.Background()
 	pgxCommander := NewPgxPostgres(pool)
-	sqlxComannder := gsql.NewSqlx(db)
+	sqlxComannder := gdb.NewSqlx(db)
 	txPgx := NewTxPgx(pool)
-	txSqlx := gsql.NewTxSqlx(db)
+	txSqlx := gdb.NewTxSqlx(db)
 
 	err := txPgx.DoTransaction(ctx, &gdb.TxOption{
 		Type:   gdb.TxTypeMongoDB,

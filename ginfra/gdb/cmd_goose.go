@@ -1,4 +1,4 @@
-package gsql
+package gdb
 
 import (
 	"bufio"

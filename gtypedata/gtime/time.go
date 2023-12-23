@@ -5,6 +5,23 @@ import (
 	"time"
 )
 
+// TimeUnit represents different units of time.
+type TimeUnit uint8
+
+const (
+	Nanoseconds TimeUnit = iota
+	Microseconds
+	Milliseconds
+)
+
+const FormatYMD string = "2006-01-02"
+const FormatYMDHM string = "2006-01-02 15:04"
+const FormatYMDHMS string = "2006-01-02 15:04:05"
+const FormatDMYHM string = "02 Jan 06 15:04"
+const FormatDMY string = "02 Jan 06"
+
+var EMPTY time.Time = time.Time{}
+
 // FormatDuration function takes a time.Duration parameter 'd'
 // and returns a formatted string representing the duration.
 // The output format varies depending on the magnitude of 'd'.
@@ -34,15 +51,6 @@ func TimeTrack(start time.Time) string {
 
 	return FormatDuration(elapsed)
 }
-
-// TimeUnit represents different units of time.
-type TimeUnit uint8
-
-const (
-	Nanoseconds TimeUnit = iota
-	Microseconds
-	Milliseconds
-)
 
 // NormalizeTimeUnit normalizes the time according to the specified TimeUnit.
 func NormalizeTimeUnit(inputTime time.Time, opt TimeUnit) time.Time {

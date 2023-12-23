@@ -27,6 +27,8 @@ This project utilises the following external Go libraries:
 10. [mongo-go-driver](https://github.com/mongodb/mongo-go-driver) - The Go driver for MongoDB. This driver provides a simple, consistent API to MongoDB from Go applications.
 
 11. [rueidis](https://github.com/redis/rueidis) - A Redis client library for Go that focuses on simplicity, correctness, and performance.
+
+12. [counterfeiter](https://github.com/maxbrunsfeld/counterfeiter) - A generate mocks interface
 ## Releases
 
 Releases should follow the 

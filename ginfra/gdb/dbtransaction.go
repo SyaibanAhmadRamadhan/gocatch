@@ -14,8 +14,8 @@ const (
 	TxTypeSqlx
 )
 
-var ErrRollback = errors.New("error rollback db.")
-var ErrCommit = errors.New("error commit db.")
+var ErrRollback = errors.New("error rollback db | ")
+var ErrCommit = errors.New("error commit db | ")
 
 func (t TxType) String() string {
 	switch t {

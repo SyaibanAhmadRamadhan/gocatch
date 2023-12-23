@@ -31,21 +31,21 @@ func ExtractStructTagsAndFields(src any, prefix string, tag string) (s map[strin
 		fieldTag := field.Tag.Get(tag)
 		switch val.Field(i).Kind() {
 		case reflect.Struct:
-			if field.Type.String() == "gsql.NullString" ||
-				field.Type.String() == "gsql.NullBool" ||
-				field.Type.String() == "gsql.NullFloat64" ||
-				field.Type.String() == "gsql.NullInt64" ||
-				field.Type.String() == "gsql.NullInt32" ||
-				field.Type.String() == "gsql.NullByte" ||
-				field.Type.String() == "gsql.NullTime" ||
+			if field.Type.String() == "gdb.SqlNullString" ||
+				field.Type.String() == "gdb.SqlNullBool" ||
+				field.Type.String() == "gdb.SqlNullFloat64" ||
+				field.Type.String() == "gdb.SqlNullInt64" ||
+				field.Type.String() == "gdb.SqlNullInt32" ||
+				field.Type.String() == "gdb.SqlNullByte" ||
+				field.Type.String() == "gdb.SqlNullTime" ||
 				field.Type.String() == "time.Time" ||
-				field.Type.String() == "gsql.NullInt16" {
+				field.Type.String() == "gdb.SqlNullInt16" {
 				if fieldTag != "" {
 					s[field.Name] = fieldTag + "|" + field.Type.String()
 				}
 				continue
 			}
-			
+
 			if field.Tag.Get(tag) != "-" && field.Tag.Get(tag) != "ignore" && field.Tag.Get(tag) != "" {
 				panic("nested struct is not supported")
 			}
