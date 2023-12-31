@@ -20,7 +20,8 @@ func TestMongoDockerTest(t *testing.T) {
 
 	// mongoDockerTestConf := MongoDockerTestConf{}
 
-	mongoClient, err := OpenConnMongoClient("mongodb://localhost:20001/?replicaSet=dbrs&directConnection=true")
+	opts := options.Client().ApplyURI("mongodb://localhost:20001/?replicaSet=dbrs&directConnection=true")
+	mongoClient, err := OpenConnMongoClient(opts)
 	gcommon.PanicIfError(err)
 	// dockerTest.NewContainer(mongoDockerTestConf.ImageVersion(dockerTest, ""), func(res *dockertest.Resource) error {
 	// 	conn, err := mongoDockerTestConf.ConnectClient(res)
