@@ -68,13 +68,13 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 			_, err := buf.WriteString(str)
 			gcommon.PanicIfError(err)
 		}
+		fn("// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/gocatch/blob/main/ginfra/gdb/generator.go. \n\n")
 
 		t := reflect.TypeOf(param.Src).Elem()
 		caller := glog.CallerInfo(2)
 		packageName := gstr.GetLastSubstring(caller.PackageName, "/")
 		fn(`package ` + packageName + "\n\n")
 
-		fn("// DO NOT EDIT, will be overwritten by https://github.com/SyaibanAhmadRamadhan/jolly/blob/main/Jdb/JOpg/postgres_generator.go. \n\n")
 		// Prepare import statements
 		res, _ := os.ReadFile(param.FileName + ".go")
 		r, _ := regexp.Compile(`import \(([^)]+)\)`)
@@ -157,23 +157,23 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 			fn("// Set" + k + " is a setter for the field or column " + k + " in the table " + t.Name() + ".\n")
 			switch typeStruct {
 			case gdbSqlNullString:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param string) string {\n")
 			case gdbSqlNullBool:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param bool) string {\n")
 			case gdbSqlNullFloat64:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param float64) string {\n")
 			case gdbSqlNullInt64:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int64) string {\n")
 			case gdbSqlNullInt32:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int32) string {\n")
 			case gdbSqlNullByte:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param byte) string {\n")
 			case gdbSqlNullTime:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param time.Time) string {\n")
 			case gdbSqlNullInt16:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param int16) string {\n")
 			default:
-				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") {\n")
+				fn(`func (` + gstr.LowercaseFirstChar(t.Name()) + ` *` + t.Name() + ") Set" + k + "(param " + strings.Split(v, "|")[1] + ") string {\n")
 			}
 
 			if typeStruct == gdbSqlNullString ||
@@ -188,6 +188,7 @@ func GeneratorModelFromStruct(params ...GeneratorModelForStructParam) {
 			} else {
 				fn(`	` + gstr.LowercaseFirstChar(t.Name()) + "." + k + " = param" + "\n")
 			}
+			fn(`	return "` + strings.Split(v, "|")[0] + "\"\n")
 			fn("}\n\n")
 		}
 
