@@ -6,6 +6,7 @@ import (
 
 	"github.com/ory/dockertest/v3"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
@@ -52,23 +53,8 @@ func (m *MongoDockerTestConf) ConnectClient(resource *dockertest.Resource) (conn
 	m.Host = strings.Split(hostAndPort, ":")[0]
 	m.Port = port
 
-	conn, err = OpenConnMongoClient(m.URI())
-	gcommon.PanicIfError(err)
-
-	return
-}
-
-func (m *MongoDockerTestConf) ConnectDB(resource *dockertest.Resource) (db *mongo.Database, err error) {
-	if m.ResourceExpired != 0 {
-		resource.Expire(m.ResourceExpired)
-	}
-
-	hostAndPort := resource.GetHostPort("27017/tcp")
-	port := strings.Split(hostAndPort, ":")[1]
-	m.Host = strings.Split(hostAndPort, ":")[0]
-	m.Port = port
-
-	db, err = OpenConnMongoDB(m.URI(), m.Database)
+	opts := options.Client().ApplyURI(m.URI())
+	conn, err = OpenConnMongoClient(opts)
 	gcommon.PanicIfError(err)
 
 	return
