@@ -1,6 +1,7 @@
 package gstr
 
 import (
+	"fmt"
 	"reflect"
 	"testing"
 )
@@ -79,4 +80,9 @@ func TestCountSubstring(t *testing.T) {
 	if result != expected {
 		t.Errorf("Expected %v, but got %v", expected, result)
 	}
+}
+
+func TestToSlug(t *testing.T) {
+	title := "How to setup opentelemetry With Docker"
+	fmt.Println(ToSlug(title))
 }

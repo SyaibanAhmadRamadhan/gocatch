@@ -53,3 +53,9 @@ func TrimSpace(s string) string {
 func CountSubstring(s, substr string) int {
 	return strings.Count(s, substr)
 }
+
+func ToSlug(str string) string {
+	slug := strings.ReplaceAll(str, " ", "-")
+	slug = strings.ToLower(slug)
+	return slug
+}
