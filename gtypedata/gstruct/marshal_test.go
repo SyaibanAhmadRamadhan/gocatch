@@ -14,7 +14,7 @@ type RequestCreateArticle struct {
 }
 
 func TestMarshalAndCencoredTag(t *testing.T) {
-	req := RequestCreateArticle{
+	req := &RequestCreateArticle{
 		TagNames:    []string{"tag1", "tag2"},
 		AuthorId:    "author123",
 		Title:       "Sample Title",

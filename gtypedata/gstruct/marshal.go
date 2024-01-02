@@ -12,7 +12,7 @@ func MarshalAndCencoredTag(src any, tagCencored string) (string, error) {
 	} else {
 		val = reflect.ValueOf(src)
 	}
-	typ := reflect.TypeOf(src)
+	typ := val.Type()
 
 	result := make(map[string]any)
 
