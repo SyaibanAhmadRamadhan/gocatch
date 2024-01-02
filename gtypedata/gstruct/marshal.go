@@ -6,7 +6,12 @@ import (
 )
 
 func MarshalAndCencoredTag(src any, tagCencored string) (string, error) {
-	val := reflect.ValueOf(src)
+	var val reflect.Value
+	if reflect.ValueOf(src).Kind() == reflect.Ptr {
+		val = reflect.ValueOf(src).Elem()
+	} else {
+		val = reflect.ValueOf(src)
+	}
 	typ := reflect.TypeOf(src)
 
 	result := make(map[string]any)
