@@ -31,10 +31,18 @@ func NewPgxPostgres(pool *pgxpool.Pool) *PostgresPgx {
 	}
 }
 
-func OpenPgxPool(connString string) *pgxpool.Pool {
+func OpenPgxPool(connString string, config ...*pgxpool.Config) *pgxpool.Pool {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	conn, err := pgxpool.New(ctx, connString)
+
+	var err error
+	var conn *pgxpool.Pool
+
+	if config != nil && len(config) > 0 {
+		conn, err = pgxpool.NewWithConfig(ctx, config[0])
+	} else {
+		conn, err = pgxpool.New(ctx, connString)
+	}
 	gcommon.PanicIfError(err)
 
 	err = conn.Ping(ctx)
