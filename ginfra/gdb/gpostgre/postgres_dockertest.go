@@ -5,12 +5,15 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/exaring/otelpgx"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest/v3"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
+	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gopentelemetry/gotelpgx"
 )
 
 type PostgresDockerTestConf struct {
@@ -64,7 +67,37 @@ func (p *PostgresDockerTestConf) ConnectPgx(resource *dockertest.Resource) (conn
 	p.Host = strings.Split(hostAndPort, ":")[0]
 	p.Port = port
 
-	conn = OpenPgxPool(p.DBURL())
+	conn = OpenPgxPool(p.DBURL(), &pgxpool.Config{
+		ConnConfig: &pgx.ConnConfig{Tracer: otelpgx.NewTracer()},
+	})
+
+	return
+}
+
+func (p *PostgresDockerTestConf) ConnectPgxWithOtel(resource *dockertest.Resource) (conn *pgxpool.Pool, err error) {
+	if p.ResourceExpired != 0 {
+		resource.Expire(p.ResourceExpired)
+	}
+
+	hostAndPort := resource.GetHostPort("5432/tcp")
+
+	port, err := strconv.Atoi(strings.Split(hostAndPort, ":")[1])
+	if err != nil {
+		return
+	}
+	p.Host = strings.Split(hostAndPort, ":")[0]
+	p.Port = port
+
+	config, err := pgxpool.ParseConfig(p.DBURL())
+	if err != nil {
+		return
+	}
+	config.ConnConfig.Tracer = gotelpgx.NewTracer()
+
+	conn = OpenPgxPoolWithConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("connect to database: %w", err)
+	}
 
 	return
 }
