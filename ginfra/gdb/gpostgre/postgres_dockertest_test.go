@@ -11,13 +11,39 @@ import (
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jmoiron/sqlx"
 	"github.com/ory/dockertest/v3"
+	"go.opentelemetry.io/otel"
+	stdout "go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/sdk/resource"
+	sdktrace "go.opentelemetry.io/otel/sdk/trace"
+	semconv "go.opentelemetry.io/otel/semconv/v1.21.0"
 
 	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra"
 	"github.com/SyaibanAhmadRamadhan/gocatch/ginfra/gdb"
 )
 
+func initTracer() *sdktrace.TracerProvider {
+	exporter, err := stdout.New(stdout.WithPrettyPrint())
+	gcommon.PanicIfError(err)
+	tp := sdktrace.NewTracerProvider(
+		sdktrace.WithSampler(sdktrace.AlwaysSample()),
+		sdktrace.WithBatcher(exporter),
+		sdktrace.WithResource(
+			resource.NewWithAttributes(
+				semconv.SchemaURL,
+				semconv.ServiceNameKey.String("my-service"),
+			)),
+	)
+	otel.SetTracerProvider(tp)
+	otel.SetTextMapPropagator(propagation.NewCompositeTextMapPropagator(propagation.TraceContext{}, propagation.Baggage{}))
+	return tp
+}
+
 func TestPostgresDockerTest(t *testing.T) {
+	tp := initTracer()
+	defer tp.Shutdown(context.Background())
+
 	dockerTest := ginfra.InitDockerTest()
 	defer dockerTest.CleanUp()
 
@@ -28,7 +54,7 @@ func TestPostgresDockerTest(t *testing.T) {
 
 	dockerTest.NewContainer(postgresDockerTest.ImageVersion(dockerTest, ""), func(res *dockertest.Resource) error {
 		time.Sleep(2 * time.Second)
-		conn, err := postgresDockerTest.ConnectPgx(res)
+		conn, err := postgresDockerTest.ConnectPgxWithOtel(res)
 		pool = conn
 		gcommon.PanicIfError(err)
 
@@ -85,7 +111,10 @@ func TestPostgresDockerTest(t *testing.T) {
 
 	wg.Wait()
 
-	row := pgxCommander.Commander.QueryRow(context.Background(), "SELECT COUNT(*) FROM users;")
+	ctx, span := otel.Tracer("test").Start(ctx, "span name")
+	defer span.End()
+
+	row := pgxCommander.Commander.QueryRow(ctx, "SELECT COUNT(*) FROM users;")
 	var count int
 	err = row.Scan(&count)
 	fmt.Println(count)
