@@ -65,7 +65,7 @@ func (p *PostgresDockerTestConf) ConnectPgx(resource *dockertest.Resource) (conn
 	p.Host = strings.Split(hostAndPort, ":")[0]
 	p.Port = port
 
-	conn = OpenPgxPool(p.DBURL())
+	conn, err = OpenPgxPool(p.DBURL())
 
 	return
 }
@@ -90,7 +90,7 @@ func (p *PostgresDockerTestConf) ConnectPgxWithOtel(resource *dockertest.Resourc
 	}
 	config.ConnConfig.Tracer = gotelpgx.NewTracer()
 
-	conn = OpenPgxPoolWithConfig(config)
+	conn, err = OpenPgxPoolWithConfig(config)
 	if err != nil {
 		return nil, fmt.Errorf("connect to database: %w", err)
 	}

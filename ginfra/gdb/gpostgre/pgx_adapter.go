@@ -6,47 +6,46 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-
-	"github.com/SyaibanAhmadRamadhan/gocatch/gcommon"
 )
 
-func OpenPgxPool(connString string) *pgxpool.Pool {
+func OpenPgxPool(connString string) (*pgxpool.Pool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	conn, err := pgxpool.New(ctx, connString)
-	gcommon.PanicIfError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	err = conn.Ping(ctx)
-	gcommon.PanicIfError(err)
 
-	return conn
+	return conn, err
 }
 
-func OpenPgxPoolWithConfig(config *pgxpool.Config) *pgxpool.Pool {
+func OpenPgxPoolWithConfig(config *pgxpool.Config) (*pgxpool.Pool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	conn, err := pgxpool.NewWithConfig(ctx, config)
-	gcommon.PanicIfError(err)
+	if err != nil {
+		return nil, err
+	}
 
 	err = conn.Ping(ctx)
-	gcommon.PanicIfError(err)
 
-	return conn
+	return conn, err
 }
 
-func OpenPgxConn(connString string, withPing bool) *pgx.Conn {
+func OpenPgxConn(connString string) (*pgx.Conn, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
 
 	conn, err := pgx.Connect(ctx, connString)
-	gcommon.PanicIfError(err)
-
-	if withPing {
-		err = conn.Ping(ctx)
-		gcommon.PanicIfError(err)
+	if err != nil {
+		return nil, err
 	}
 
-	return conn
+	err = conn.Ping(ctx)
+
+	return conn, err
 }
