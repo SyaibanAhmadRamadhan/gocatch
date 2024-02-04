@@ -6,13 +6,11 @@ import (
 )
 
 func TestAppendUniqueVal(t *testing.T) {
-	name := []string{
-		"rama",
-	}
-	name = AppendUniqueVal(name, "rama4", "rama", "rama2", "rama0")
+	name := make([]int64, 0)
+	name = AppendUniqueVal(name, 1, 3, 5, 5)
 	fmt.Println(name)
 
-	name2, err := AppendUniqueValWithErr(name, "rama3", "rama123", "rama212345")
+	name2, err := AppendUniqueValWithErr(name, 1, 3, 5, 5)
 	fmt.Println(name2)
 	fmt.Println(err)
 }

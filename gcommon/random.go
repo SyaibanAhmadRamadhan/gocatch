@@ -29,15 +29,13 @@ func RandomStringFromCharset(length int, charset []rune) string {
 
 // RandomNumericString generates a random numeric string of a given length
 func RandomNumericString(length int) string {
-	seededRandInt := seededRand.Int()
+	numString := ""
 
-	minValue := 1
-	for i := 1; i < length; i++ {
-		minValue *= 10
+	for i := 0; i < length; i++ {
+		digit := rand.Intn(10)
+		numString += strconv.Itoa(digit)
 	}
-	maxValue := minValue * 10
 
-	numString := strconv.Itoa(seededRandInt % maxValue)
 	return numString
 }
 
