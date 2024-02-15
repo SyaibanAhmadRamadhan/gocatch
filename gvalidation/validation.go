@@ -9,8 +9,10 @@ import (
 )
 
 type Validation struct {
-	Validate     *validator.Validate
-	Transalation ut.Translator
+	Validate      *validator.Validate
+	Transalation  ut.Translator
+	IdTranslation ut.Translator
+	EnTranslation ut.Translator
 }
 
 func New(opt ...validator.Option) *Validation {

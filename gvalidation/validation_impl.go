@@ -79,7 +79,9 @@ func (v *Validation) SetIdTranslation() {
 	err := idtranslations.RegisterDefaultTranslations(v.Validate, trans)
 	gcommon.PanicIfError(err)
 
+	v.IdTranslation = trans
 	v.Transalation = trans
+
 }
 
 func (v *Validation) SetEnTranslation() {
@@ -94,5 +96,6 @@ func (v *Validation) SetEnTranslation() {
 	err := entranslation.RegisterDefaultTranslations(v.Validate, trans)
 	gcommon.PanicIfError(err)
 
+	v.EnTranslation = trans
 	v.Transalation = trans
 }
