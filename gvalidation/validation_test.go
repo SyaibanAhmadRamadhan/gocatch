@@ -14,7 +14,7 @@ var validate *Validation
 
 func init() {
 	validate = New()
-	validate.SetIdTranslation()
+	validate.InitIdTranslation()
 }
 
 type Request struct {

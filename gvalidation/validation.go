@@ -8,6 +8,13 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
+type Transalation uint
+
+const (
+	En Transalation = iota
+	Id
+)
+
 type Validation struct {
 	Validate      *validator.Validate
 	Transalation  ut.Translator

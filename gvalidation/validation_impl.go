@@ -67,7 +67,7 @@ func (v *Validation) PrintFieldValidationError(field validator.FieldError) {
 	fmt.Println("Type String: ", field.Type().String())
 }
 
-func (v *Validation) SetIdTranslation() {
+func (v *Validation) InitIdTranslation() {
 	idLocale := id.New()
 	uni := ut.New(idLocale, idLocale)
 
@@ -80,11 +80,10 @@ func (v *Validation) SetIdTranslation() {
 	gcommon.PanicIfError(err)
 
 	v.IdTranslation = trans
-	v.Transalation = trans
 
 }
 
-func (v *Validation) SetEnTranslation() {
+func (v *Validation) InitEnTranslation() {
 	enLocale := en.New()
 	uni := ut.New(enLocale, enLocale)
 
@@ -97,5 +96,15 @@ func (v *Validation) SetEnTranslation() {
 	gcommon.PanicIfError(err)
 
 	v.EnTranslation = trans
-	v.Transalation = trans
+}
+
+func (v *Validation) SetTranslation(t Transalation) {
+	switch t {
+	case En:
+		v.Transalation = v.EnTranslation
+	case Id:
+		v.Transalation = v.IdTranslation
+	default:
+		panic("invalid translation")
+	}
 }
